@@ -1,64 +1,64 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { mockProperties } from '@/lib/mock-properties';
+import { agents, getMockActivities, formatActivityTime, getActivityIcon, AgentActivity, Agent } from '@/lib/agents';
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const [selectedAgent, setSelectedAgent] = useState<Agent>(agents[0]);
+  const [activities, setActivities] = useState<AgentActivity[]>([]);
+
+  useEffect(() => {
+    const savedAgentId = localStorage.getItem('selectedAgentId');
+    if (savedAgentId) {
+      const agent = agents.find(a => a.id === savedAgentId);
+      if (agent) setSelectedAgent(agent);
+    }
+  }, []);
+
+  useEffect(() => {
+    setActivities(getMockActivities(selectedAgent.id));
+  }, [selectedAgent.id]);
 
   const stats = [
     {
       label: 'Properties Viewed',
       value: '12',
       change: '+3 this week',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-      ),
+      icon: '👁️',
     },
     {
       label: 'Saved Properties',
       value: '5',
       change: '+2 this week',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
-      ),
+      icon: '❤️',
     },
     {
       label: 'AI Analyses',
       value: '8',
       change: '+4 this week',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
+      icon: '🤖',
     },
     {
       label: 'Estimated Savings',
       value: '$24,500',
       change: 'vs traditional agent',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      ),
+      icon: '💰',
     },
   ];
 
   const recentProperties = mockProperties.slice(0, 3);
+  const unreadActivities = activities.filter(a => !a.read);
 
   return (
     <div className="space-y-6">
-      {/* Welcome header */}
-      <div className="flex items-center justify-between">
+      {/* Welcome header with agent */}
+      <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">
             Welcome back, {user?.name?.split(' ')[0] || 'there'}
@@ -67,8 +67,17 @@ export default function DashboardPage() {
             Here&apos;s what&apos;s happening with your property search
           </p>
         </div>
-        <Link href="/dashboard/search">
-          <Button>Search Properties</Button>
+        <Link
+          href="/dashboard/my-agent"
+          className={`flex items-center space-x-3 px-4 py-3 rounded-xl bg-gradient-to-r ${selectedAgent.gradientClass} hover:opacity-90 transition-opacity`}
+        >
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-2xl">
+            {selectedAgent.avatar}
+          </div>
+          <div className="text-white">
+            <p className="text-sm text-white/80">Your Agent</p>
+            <p className="font-semibold">{selectedAgent.name}</p>
+          </div>
         </Link>
       </div>
 
@@ -83,9 +92,7 @@ export default function DashboardPage() {
                   <p className="text-2xl font-bold text-white mt-1">{stat.value}</p>
                   <p className="text-emerald-400 text-xs mt-1">{stat.change}</p>
                 </div>
-                <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
-                  {stat.icon}
-                </div>
+                <div className="text-3xl">{stat.icon}</div>
               </div>
             </CardContent>
           </Card>
@@ -94,8 +101,67 @@ export default function DashboardPage() {
 
       {/* Main content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent properties */}
-        <div className="lg:col-span-2">
+        {/* Left column - Activity + Properties */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Agent Activity Feed */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${selectedAgent.gradientClass} flex items-center justify-center text-lg`}>
+                  {selectedAgent.avatar}
+                </div>
+                <div>
+                  <CardTitle>{selectedAgent.name}&apos;s Activity</CardTitle>
+                  <p className="text-sm text-slate-500">What your agent has been doing</p>
+                </div>
+              </div>
+              {unreadActivities.length > 0 && (
+                <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-medium">
+                  {unreadActivities.length} new
+                </span>
+              )}
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {activities.slice(0, 4).map((activity) => (
+                  <div
+                    key={activity.id}
+                    className={`flex items-start space-x-3 p-3 rounded-lg transition-colors ${
+                      !activity.read ? 'bg-blue-500/10 border border-blue-500/20' : 'hover:bg-slate-700/50'
+                    }`}
+                  >
+                    <div className="text-xl">{getActivityIcon(activity.type)}</div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between">
+                        <p className={`font-medium ${!activity.read ? 'text-white' : 'text-slate-300'}`}>
+                          {activity.title}
+                        </p>
+                        <span className="text-xs text-slate-500 whitespace-nowrap ml-2">
+                          {formatActivityTime(activity.timestamp)}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-400 mt-0.5">{activity.description}</p>
+                      {activity.actionUrl && (
+                        <Link
+                          href={activity.actionUrl}
+                          className="inline-block mt-1 text-xs text-emerald-400 hover:text-emerald-300"
+                        >
+                          {activity.actionLabel} →
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Link href="/dashboard/my-agent">
+                <Button variant="ghost" size="sm" className="mt-4 text-slate-400 hover:text-white">
+                  View all activity →
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          {/* Recent properties */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Recently Viewed Properties</CardTitle>
@@ -143,8 +209,63 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* AI Agent sidebar */}
+        {/* Right sidebar */}
         <div className="space-y-6">
+          {/* Next Steps */}
+          <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <span>✨</span>
+                <span>Next Steps</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[
+                  {
+                    icon: '💬',
+                    title: 'Chat with your agent',
+                    description: 'Get personalized recommendations',
+                    url: '/dashboard/buyer-agent',
+                    priority: true,
+                  },
+                  {
+                    icon: '🔍',
+                    title: 'Refine your search',
+                    description: 'Update your preferences',
+                    url: '/dashboard/search',
+                    priority: false,
+                  },
+                  {
+                    icon: '📊',
+                    title: 'View market report',
+                    description: 'Austin housing trends',
+                    url: '/dashboard/buyer-agent',
+                    priority: false,
+                  },
+                ].map((step) => (
+                  <Link
+                    key={step.title}
+                    href={step.url}
+                    className={`flex items-start space-x-3 p-3 rounded-lg transition-colors ${
+                      step.priority
+                        ? 'bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20'
+                        : 'hover:bg-slate-700/50'
+                    }`}
+                  >
+                    <span className="text-xl">{step.icon}</span>
+                    <div>
+                      <p className={`font-medium ${step.priority ? 'text-emerald-400' : 'text-white'}`}>
+                        {step.title}
+                      </p>
+                      <p className="text-sm text-slate-400">{step.description}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Quick actions */}
           <Card>
             <CardHeader>
@@ -152,53 +273,49 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <Link href="/dashboard/buyer-agent" className="block">
+                <Link href="/dashboard/my-agent" className="block">
                   <Button variant="secondary" className="w-full justify-start gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                    </svg>
-                    Chat with AI Buyer Agent
+                    <span>🤖</span>
+                    My Agent Hub
                   </Button>
                 </Link>
-                <Link href="/dashboard/search" className="block">
+                <Link href="/dashboard/buyer-agent" className="block">
                   <Button variant="ghost" className="w-full justify-start gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    Search Properties
+                    <span>💬</span>
+                    Chat with {selectedAgent.name}
                   </Button>
                 </Link>
                 <Link href="/dashboard/saved" className="block">
                   <Button variant="ghost" className="w-full justify-start gap-2">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                    View Saved Properties
+                    <span>❤️</span>
+                    Saved Properties
                   </Button>
                 </Link>
               </div>
             </CardContent>
           </Card>
 
-          {/* AI insights */}
-          <Card className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border-emerald-500/20">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-                <CardTitle className="text-emerald-400">AI Market Insight</CardTitle>
+          {/* Human Support */}
+          <Card className="bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600">
+            <CardContent className="pt-6">
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-xl">
+                  👤
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-white">Need Human Help?</h3>
+                  <p className="text-sm text-gray-300 mt-1">
+                    Licensed experts are available for complex questions.
+                  </p>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="mt-3 bg-white text-gray-900 hover:bg-gray-100"
+                  >
+                    Talk to an Expert
+                  </Button>
+                </div>
               </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                Based on current market trends in Austin, TX, properties are staying on market
-                an average of 28 days. Prices have stabilized after a 5% correction.
-                This is a favorable time for buyers to negotiate.
-              </p>
-              <Link href="/dashboard/buyer-agent">
-                <Button variant="ghost" size="sm" className="mt-4 text-emerald-400 hover:text-emerald-300">
-                  Ask AI for more insights →
-                </Button>
-              </Link>
             </CardContent>
           </Card>
         </div>
