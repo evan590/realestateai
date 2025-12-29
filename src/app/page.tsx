@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -17,9 +19,10 @@ export default function Home() {
               <a href="#features" className="text-slate-300 hover:text-white transition-colors">Features</a>
               <a href="#pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</a>
               <a href="#about" className="text-slate-300 hover:text-white transition-colors">About</a>
-              <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+              <Link href="/sign-in" className="text-slate-300 hover:text-white transition-colors">Sign In</Link>
+              <Link href="/sign-up" className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                 Get Started
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -45,12 +48,12 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all hover:scale-105 shadow-lg shadow-emerald-500/25">
+              <Link href="/sign-up" className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all hover:scale-105 shadow-lg shadow-emerald-500/25">
                 Start Free Trial
-              </button>
-              <button className="border border-slate-600 hover:border-slate-500 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all hover:bg-slate-800">
-                Watch Demo
-              </button>
+              </Link>
+              <Link href="/dashboard" className="border border-slate-600 hover:border-slate-500 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all hover:bg-slate-800">
+                View Demo
+              </Link>
             </div>
           </div>
         </div>
@@ -127,9 +130,9 @@ export default function Home() {
             <p className="text-slate-300 text-lg mb-8 max-w-2xl mx-auto">
               Join thousands of agents, investors, and homebuyers who are already using RealEstateAI.
             </p>
-            <button className="bg-white text-slate-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-slate-100 transition-all hover:scale-105">
+            <Link href="/sign-up" className="inline-block bg-white text-slate-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-slate-100 transition-all hover:scale-105">
               Get Started for Free
-            </button>
+            </Link>
           </div>
         </div>
       </section>
