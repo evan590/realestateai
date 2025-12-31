@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { agents, Agent } from '@/lib/agents';
 
-const navigation = [
+const mainNavigation = [
   {
     name: 'Dashboard',
     href: '/dashboard',
@@ -17,6 +17,9 @@ const navigation = [
     icon: '🤖',
     highlight: true,
   },
+];
+
+const searchNavigation = [
   {
     name: 'Search Properties',
     href: '/dashboard/search',
@@ -32,10 +35,28 @@ const navigation = [
     href: '/dashboard/buyer-agent',
     icon: '💬',
   },
+];
+
+const transactionNavigation = [
   {
-    name: 'Transactions',
-    href: '/dashboard/transactions',
-    icon: '📝',
+    name: 'Walkthroughs',
+    href: '/dashboard/walkthrough',
+    icon: '🚶',
+  },
+  {
+    name: 'Documents',
+    href: '/dashboard/documents',
+    icon: '📁',
+  },
+  {
+    name: 'Professionals',
+    href: '/dashboard/professionals',
+    icon: '🔧',
+  },
+  {
+    name: 'Mortgage',
+    href: '/dashboard/mortgage',
+    icon: '🏦',
   },
 ];
 
@@ -83,35 +104,94 @@ export function Sidebar() {
       </Link>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href ||
-            (item.href !== '/dashboard' && pathname.startsWith(item.href + '/'));
-          const isExactDashboard = item.href === '/dashboard' && pathname === '/dashboard';
-          const active = isExactDashboard || (item.href !== '/dashboard' && isActive);
+      <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
+        {/* Main */}
+        <div className="space-y-1">
+          {mainNavigation.map((item) => {
+            const isActive = pathname === item.href ||
+              (item.href !== '/dashboard' && pathname.startsWith(item.href + '/'));
+            const isExactDashboard = item.href === '/dashboard' && pathname === '/dashboard';
+            const active = isExactDashboard || (item.href !== '/dashboard' && isActive);
 
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
-                ${active
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                  : item.highlight
-                    ? 'text-white bg-slate-800 hover:bg-slate-700'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
-                }
-              `}
-            >
-              <span className="text-lg">{item.icon}</span>
-              {item.name}
-              {item.highlight && !active && (
-                <span className="ml-auto w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              )}
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`
+                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
+                  ${active
+                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                    : item.highlight
+                      ? 'text-white bg-slate-800 hover:bg-slate-700'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  }
+                `}
+              >
+                <span className="text-lg">{item.icon}</span>
+                {item.name}
+                {item.highlight && !active && (
+                  <span className="ml-auto w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Search & Properties */}
+        <div>
+          <p className="px-3 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            Properties
+          </p>
+          <div className="space-y-1">
+            {searchNavigation.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`
+                    flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
+                    ${isActive
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    }
+                  `}
+                >
+                  <span className="text-lg">{item.icon}</span>
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Transaction Tools */}
+        <div>
+          <p className="px-3 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            Transaction Tools
+          </p>
+          <div className="space-y-1">
+            {transactionNavigation.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`
+                    flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
+                    ${isActive
+                      ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    }
+                  `}
+                >
+                  <span className="text-lg">{item.icon}</span>
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
       </nav>
 
       {/* Human Support */}

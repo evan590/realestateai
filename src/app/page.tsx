@@ -289,6 +289,390 @@ export default function Home() {
         </div>
       </section>
 
+      {/* NEW: Your AI Transaction Partner Section */}
+      <section className="py-20 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/30 rounded-full px-4 py-1.5 mb-6">
+              <span className="text-emerald-400 text-sm font-medium">Full-Stack AI Platform</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              More Than an Agent —<br />
+              <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">A Full-Stack AI Transaction Partner</span>
+            </h2>
+            <p className="text-slate-400 text-lg max-w-3xl mx-auto">
+              From first showing to closing day, your AI agent walks you through every step.
+              Walkthrough guidance, document management, e-signatures, expert recommendations — all in one platform.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: "🏠", title: "AI-Guided Walkthroughs", desc: "Room-by-room inspection guidance when you tour properties" },
+              { icon: "📁", title: "Document Command Center", desc: "All your docs in one place, explained in plain English" },
+              { icon: "✍️", title: "Built-In E-Signatures", desc: "Sign offers and contracts without leaving the app" },
+              { icon: "🧠", title: "Proactive AI Advisor", desc: "Your agent tells you what to do next, before you ask" },
+              { icon: "👷", title: "Vetted Professionals", desc: "Connect with inspectors, attorneys, and contractors" },
+              { icon: "🏦", title: "Mortgage Tools", desc: "Compare rates and track your loan application" },
+            ].map((item, index) => (
+              <div key={index} className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 hover:border-emerald-500/50 transition-all">
+                <div className="text-4xl mb-4">{item.icon}</div>
+                <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+                <p className="text-slate-400 text-sm">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: AI-Guided Walkthroughs Section */}
+      <section className="py-20 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-full px-4 py-1.5 mb-6">
+                <span className="text-red-400 text-sm font-medium">🚨 Never Miss a Red Flag</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+                AI-Guided Property Walkthroughs
+              </h2>
+              <p className="text-slate-400 text-lg mb-8">
+                When you tour a property, your AI agent guides you room-by-room, telling you exactly what to look for.
+                Foundation issues, roof problems, plumbing red flags — your agent catches what you&apos;d miss.
+              </p>
+
+              <div className="space-y-4 mb-8">
+                {[
+                  "Voice-enabled — talk hands-free while walking through",
+                  "Snap photos of issues and get instant AI assessment",
+                  "Dynamic checklists based on home type, age, and location",
+                  "Repair cost estimates and negotiation leverage",
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-slate-300">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Link href="/dashboard/walkthrough" className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-medium">
+                Try a walkthrough →
+              </Link>
+            </div>
+
+            {/* Walkthrough UI Mockup */}
+            <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-2xl">
+              <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-700">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center">
+                    <span className="text-white">🎤</span>
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">Kitchen Inspection</p>
+                    <p className="text-slate-400 text-sm">Room 3 of 8</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 text-emerald-400">
+                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                  <span className="text-sm">Listening...</span>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 p-3 bg-slate-700/50 rounded-xl">
+                  <span className="text-xl">✅</span>
+                  <div>
+                    <p className="text-white text-sm font-medium">Appliances - Normal Wear</p>
+                    <p className="text-slate-400 text-xs">Stainless steel appliances, ~5 years old</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+                  <span className="text-xl">⚠️</span>
+                  <div>
+                    <p className="text-yellow-400 text-sm font-medium">Under-Sink Plumbing</p>
+                    <p className="text-slate-400 text-xs">Minor water staining detected. Worth monitoring.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
+                  <span className="text-xl">🚨</span>
+                  <div>
+                    <p className="text-red-400 text-sm font-medium">Electrical Panel - Red Flag</p>
+                    <p className="text-slate-400 text-xs">Outdated Federal Pacific panel. Est. replacement: $2,500-$4,000</p>
+                    <p className="text-emerald-400 text-xs mt-1">💡 Use this for $3,000+ negotiation leverage</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-slate-700 flex gap-3">
+                <button className="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-lg text-sm transition-colors">
+                  📷 Take Photo
+                </button>
+                <button className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-lg text-sm transition-colors">
+                  Next Room →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Document Command Center Section */}
+      <section className="py-20 bg-slate-800/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Document UI Mockup */}
+            <div className="order-2 lg:order-1 bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-2xl">
+              <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-700">
+                <h3 className="text-white font-medium">Document Center</h3>
+                <button className="bg-emerald-500 text-white px-3 py-1 rounded-lg text-sm">+ Upload</button>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { name: "Home Inspection Report.pdf", status: "Reviewed", icon: "📋", alert: true },
+                  { name: "Seller Disclosure.pdf", status: "Reviewed", icon: "📄", alert: false },
+                  { name: "Purchase Agreement.pdf", status: "Pending Signature", icon: "✍️", alert: false },
+                  { name: "Title Report.pdf", status: "New", icon: "📑", alert: false },
+                ].map((doc, index) => (
+                  <div key={index} className="flex items-center gap-3 p-3 bg-slate-700/50 rounded-xl hover:bg-slate-700 transition-colors cursor-pointer">
+                    <span className="text-2xl">{doc.icon}</span>
+                    <div className="flex-1">
+                      <p className="text-white text-sm font-medium">{doc.name}</p>
+                      <p className="text-slate-400 text-xs">{doc.status}</p>
+                    </div>
+                    {doc.alert && (
+                      <span className="bg-yellow-500/20 text-yellow-400 text-xs px-2 py-1 rounded-full">⚠️ 2 flags</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                <p className="text-emerald-400 text-sm font-medium mb-1">🤖 AI Summary</p>
+                <p className="text-slate-300 text-xs">The inspection report notes foundation concerns on page 12. I recommend getting a structural engineer&apos;s opinion before proceeding.</p>
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+                Every Document. One Place.<br />
+                <span className="text-emerald-400">Zero Confusion.</span>
+              </h2>
+              <p className="text-slate-400 text-lg mb-8">
+                Inspections, contracts, disclosures — all stored securely and explained in plain English by your AI agent.
+                Sign everything without leaving the app.
+              </p>
+
+              <div className="space-y-4 mb-8">
+                {[
+                  "AI-generated plain English summaries for every document",
+                  "Important items highlighted and explained",
+                  "Search across all documents instantly",
+                  "Built-in e-signatures — no DocuSign needed",
+                  "Share securely with your team",
+                ].map((item, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-6 h-6 bg-emerald-500/10 rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-slate-300">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Link href="/dashboard/documents" className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-medium">
+                Explore the document center →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Proactive AI Advisor Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+                AI That Advises,<br />
+                <span className="text-emerald-400">Not Just Assists</span>
+              </h2>
+              <p className="text-slate-400 text-lg mb-8">
+                Your AI agent doesn&apos;t wait for you to ask. It analyzes your walkthrough findings, reviews your documents,
+                and tells you exactly what to do next — and when to call in an expert.
+              </p>
+
+              <div className="space-y-4 mb-8">
+                <div className="flex items-start gap-3 p-4 bg-slate-800/50 border border-slate-700/50 rounded-xl">
+                  <span className="text-2xl">✅</span>
+                  <div>
+                    <p className="text-white font-medium">Normal for homes this age</p>
+                    <p className="text-slate-400 text-sm">No action needed — proceed with confidence</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
+                  <span className="text-2xl">⚠️</span>
+                  <div>
+                    <p className="text-yellow-400 font-medium">Worth investigating</p>
+                    <p className="text-slate-400 text-sm">Here&apos;s what I recommend and who to call</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                  <span className="text-2xl">🚨</span>
+                  <div>
+                    <p className="text-red-400 font-medium">Potential deal-breaker</p>
+                    <p className="text-slate-400 text-sm">Do not proceed without expert review</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Advisor Mockup */}
+            <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-4 shadow-2xl">
+              <div className="flex items-center gap-3 mb-4 pb-4 border-b border-slate-700">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold">A</span>
+                </div>
+                <div>
+                  <p className="text-white font-medium">Alex&apos;s Recommendations</p>
+                  <p className="text-slate-400 text-sm">Based on your 123 Oak St walkthrough</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="p-4 bg-slate-700/50 rounded-xl">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-red-400 font-semibold">🚨 Action Required</span>
+                  </div>
+                  <p className="text-white text-sm mb-2">Based on the foundation cracks you photographed, I recommend getting a structural engineer inspection before proceeding.</p>
+                  <button className="bg-emerald-500 text-white text-sm px-4 py-2 rounded-lg">Find Structural Engineers →</button>
+                </div>
+                <div className="p-4 bg-slate-700/50 rounded-xl">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-yellow-400 font-semibold">💰 Negotiation Leverage</span>
+                  </div>
+                  <p className="text-white text-sm">The electrical panel issue could be worth <span className="text-emerald-400 font-bold">$3,000-$4,000</span> off the asking price.</p>
+                </div>
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                  <p className="text-emerald-400 font-semibold mb-1">📊 Overall Risk Assessment</p>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 bg-slate-700 rounded-full h-2">
+                      <div className="bg-yellow-400 h-2 rounded-full" style={{ width: '60%' }}></div>
+                    </div>
+                    <span className="text-yellow-400 text-sm font-medium">Medium Risk</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Connect with Trusted Pros Section */}
+      <section className="py-20 bg-slate-800/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              When You Need a Human,<br />
+              <span className="text-emerald-400">We&apos;ve Got You</span>
+            </h2>
+            <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+              Your AI handles the legwork, but some things need a human touch. Instantly connect with
+              top-rated local inspectors, attorneys, contractors, and mortgage brokers — all vetted and ready to help.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: "🔍", title: "Home Inspectors", desc: "Certified professionals for thorough inspections" },
+              { icon: "🏗️", title: "Structural Engineers", desc: "Foundation and structural assessments" },
+              { icon: "⚖️", title: "Real Estate Attorneys", desc: "Contract review and legal guidance" },
+              { icon: "🔧", title: "Contractors", desc: "Roof, plumbing, electrical, and more" },
+              { icon: "💰", title: "Mortgage Brokers", desc: "Best rates from multiple lenders" },
+              { icon: "📋", title: "Appraisers", desc: "Professional property valuations" },
+              { icon: "🏠", title: "Title Companies", desc: "Title search and insurance" },
+              { icon: "🛡️", title: "Insurance Agents", desc: "Home insurance quotes and coverage" },
+            ].map((pro, index) => (
+              <div key={index} className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 hover:border-emerald-500/50 transition-all text-center">
+                <div className="text-4xl mb-4">{pro.icon}</div>
+                <h3 className="text-lg font-semibold text-white mb-2">{pro.title}</h3>
+                <p className="text-slate-400 text-sm">{pro.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/dashboard/professionals" className="inline-flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-xl font-medium transition-colors">
+              Browse Professionals →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Financing Built In Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+                Mortgage Tools<br />
+                <span className="text-emerald-400">Inside the Platform</span>
+              </h2>
+              <p className="text-slate-400 text-lg mb-8">
+                Compare rates, track your loan application, and get pre-approval guidance — all without leaving the app.
+                Your AI agent even explains mortgage terms in plain English.
+              </p>
+
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                {[
+                  { icon: "📊", title: "Rate Comparison", desc: "See rates from multiple lenders" },
+                  { icon: "💵", title: "Affordability Calc", desc: "Know your buying power" },
+                  { icon: "📋", title: "Loan Tracking", desc: "Monitor application status" },
+                  { icon: "📄", title: "Doc Upload", desc: "Submit lender requirements" },
+                ].map((item, index) => (
+                  <div key={index} className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-4">
+                    <div className="text-2xl mb-2">{item.icon}</div>
+                    <p className="text-white font-medium text-sm">{item.title}</p>
+                    <p className="text-slate-400 text-xs">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              <Link href="/dashboard/mortgage" className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-medium">
+                Explore mortgage tools →
+              </Link>
+            </div>
+
+            {/* Mortgage UI Mockup */}
+            <div className="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 shadow-2xl">
+              <h3 className="text-white font-semibold mb-4">Your Mortgage Snapshot</h3>
+              <div className="space-y-4">
+                <div className="p-4 bg-slate-700/50 rounded-xl">
+                  <p className="text-slate-400 text-sm mb-1">Pre-Approved Amount</p>
+                  <p className="text-3xl font-bold text-emerald-400">$485,000</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-slate-700/50 rounded-xl">
+                    <p className="text-slate-400 text-sm mb-1">Best Rate Found</p>
+                    <p className="text-xl font-bold text-white">6.25%</p>
+                    <p className="text-emerald-400 text-xs">30-yr fixed</p>
+                  </div>
+                  <div className="p-4 bg-slate-700/50 rounded-xl">
+                    <p className="text-slate-400 text-sm mb-1">Est. Monthly</p>
+                    <p className="text-xl font-bold text-white">$2,984</p>
+                    <p className="text-slate-400 text-xs">Principal + Interest</p>
+                  </div>
+                </div>
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                  <p className="text-emerald-400 text-sm">🤖 Alex says: "Based on your income and the current rates, I recommend locking in soon. Rates are expected to rise next month."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Comparison Section */}
       <section className="py-20 bg-slate-800/30">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -408,6 +792,50 @@ export default function Home() {
                 <p className="text-slate-400 text-sm">Real attorney access</p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: One Platform Journey Section */}
+      <section className="py-20 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              One Platform. Entire Transaction.
+            </h2>
+            <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+              This isn&apos;t just an AI assistant — it&apos;s a full-stack AI transaction partner that replaces confusion,
+              reduces risk, and walks you from first showing to closing, all in one place.
+            </p>
+          </div>
+
+          {/* Journey Timeline */}
+          <div className="relative">
+            <div className="hidden md:block absolute top-1/2 left-0 right-0 h-1 bg-slate-700 -translate-y-1/2"></div>
+            <div className="grid md:grid-cols-6 gap-6">
+              {[
+                { icon: "🔍", title: "Search", desc: "Find properties" },
+                { icon: "🏠", title: "Tour", desc: "AI-guided walkthroughs" },
+                { icon: "📊", title: "Analyze", desc: "Get AI insights" },
+                { icon: "📄", title: "Documents", desc: "Store & sign" },
+                { icon: "👷", title: "Experts", desc: "Connect with pros" },
+                { icon: "🎉", title: "Close", desc: "Get your keys" },
+              ].map((step, index) => (
+                <div key={index} className="relative text-center">
+                  <div className="w-16 h-16 bg-slate-800 border-2 border-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl relative z-10">
+                    {step.icon}
+                  </div>
+                  <h3 className="text-white font-semibold">{step.title}</h3>
+                  <p className="text-slate-400 text-sm">{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/sign-up" className="inline-block bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all hover:scale-105">
+              Start Your Journey →
+            </Link>
           </div>
         </div>
       </section>

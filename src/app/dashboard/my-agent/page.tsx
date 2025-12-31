@@ -203,38 +203,204 @@ export default function MyAgentPage() {
             </div>
           </div>
 
-          {/* Next Steps */}
+          {/* Proactive AI Advisor */}
+          <div className="bg-gradient-to-br from-emerald-900 to-slate-900 rounded-xl p-6 text-white border border-emerald-800">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center">
+                  <span className="text-xl">🧠</span>
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold">AI Proactive Advisor</h2>
+                  <p className="text-emerald-300 text-sm">Real-time insights from your AI agent</p>
+                </div>
+              </div>
+              <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-medium">
+                3 Active Insights
+              </span>
+            </div>
+
+            {/* Priority Insights */}
+            <div className="space-y-4">
+              {/* Critical Insight */}
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <span className="text-xl">🚨</span>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-red-400 uppercase tracking-wide">Deal-Breaker Alert</span>
+                      <span className="text-xs text-gray-400">2 hours ago</span>
+                    </div>
+                    <p className="text-white font-medium mt-1">Electrical Panel Requires Immediate Attention</p>
+                    <p className="text-gray-300 text-sm mt-1">
+                      Your walkthrough flagged the electrical panel as critical. This is a common
+                      negotiation point - sellers typically credit $2,500-3,500 for panel upgrades.
+                    </p>
+                    <div className="mt-3 flex items-center space-x-3">
+                      <span className="px-2 py-1 bg-slate-700 rounded text-xs text-gray-300">
+                        Est. Cost: $2,500-3,500
+                      </span>
+                      <span className="px-2 py-1 bg-emerald-500/20 rounded text-xs text-emerald-300">
+                        High Negotiation Leverage
+                      </span>
+                    </div>
+                    <div className="mt-3 flex space-x-2">
+                      <Link
+                        href="/dashboard/professionals"
+                        className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 rounded text-sm font-medium transition-colors"
+                      >
+                        Find Electrician
+                      </Link>
+                      <button className="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 rounded text-sm font-medium transition-colors">
+                        Draft Repair Request
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Warning Insight */}
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <span className="text-xl">⚠️</span>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-yellow-400 uppercase tracking-wide">Investigate</span>
+                      <span className="text-xs text-gray-400">Yesterday</span>
+                    </div>
+                    <p className="text-white font-medium mt-1">GFCI Outlets Missing in Bathrooms</p>
+                    <p className="text-gray-300 text-sm mt-1">
+                      The inspection report notes missing GFCI protection. This is a code violation
+                      that's typically an easy $200-400 fix, but worth including in your repair request.
+                    </p>
+                    <div className="mt-3">
+                      <span className="px-2 py-1 bg-slate-700 rounded text-xs text-gray-300">
+                        Est. Cost: $200-400
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Positive Insight */}
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
+                <div className="flex items-start space-x-3">
+                  <span className="text-xl">✅</span>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-emerald-400 uppercase tracking-wide">Good News</span>
+                      <span className="text-xs text-gray-400">Today</span>
+                    </div>
+                    <p className="text-white font-medium mt-1">Title Report is Clear</p>
+                    <p className="text-gray-300 text-sm mt-1">
+                      I've reviewed the title report and found no liens, judgments, or issues that would
+                      prevent transfer. Property taxes are current and there's no HOA to worry about.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Negotiation Summary */}
+            <div className="mt-6 pt-6 border-t border-slate-700">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+                Negotiation Summary
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-slate-800/50 rounded-lg p-4">
+                  <p className="text-gray-400 text-sm">Total Repair Estimates</p>
+                  <p className="text-2xl font-bold text-white">$2,700 - $3,900</p>
+                </div>
+                <div className="bg-slate-800/50 rounded-lg p-4">
+                  <p className="text-gray-400 text-sm">Suggested Credit Request</p>
+                  <p className="text-2xl font-bold text-emerald-400">$3,500</p>
+                </div>
+              </div>
+              <p className="text-gray-400 text-sm mt-4">
+                💡 Based on comparable sales and typical seller responses in this market,
+                I recommend requesting a $3,500 credit rather than asking for repairs. This
+                is within the median credit amount for similar issues.
+              </p>
+            </div>
+
+            {/* Recommended Actions */}
+            <div className="mt-6 pt-6 border-t border-slate-700">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+                Recommended Next Steps
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <span className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                    <span className="text-white">Submit repair request addendum by Thursday</span>
+                  </div>
+                  <Link
+                    href="/dashboard/documents"
+                    className="text-emerald-400 hover:text-emerald-300 text-sm font-medium"
+                  >
+                    Start →
+                  </Link>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <span className="w-6 h-6 bg-slate-600 rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                    <span className="text-gray-300">Get electrician quote for panel upgrade</span>
+                  </div>
+                  <Link
+                    href="/dashboard/professionals"
+                    className="text-emerald-400 hover:text-emerald-300 text-sm font-medium"
+                  >
+                    Find Pro →
+                  </Link>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <span className="w-6 h-6 bg-slate-600 rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                    <span className="text-gray-300">Schedule pre-approval rate lock</span>
+                  </div>
+                  <Link
+                    href="/dashboard/mortgage"
+                    className="text-emerald-400 hover:text-emerald-300 text-sm font-medium"
+                  >
+                    View Rates →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Actions Grid */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Suggested Next Steps</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
             <div className="grid md:grid-cols-2 gap-4">
               {[
                 {
-                  icon: '🔍',
-                  title: 'Refine Your Search',
-                  description: 'Update your preferences to get better matches',
-                  action: 'Update Criteria',
-                  url: '/dashboard/search',
-                },
-                {
-                  icon: '📊',
-                  title: 'Get Market Insights',
-                  description: 'Ask your agent about Austin market trends',
-                  action: 'Chat Now',
-                  url: '/dashboard/buyer-agent',
-                },
-                {
                   icon: '📝',
-                  title: 'Complete Your Profile',
-                  description: 'Add more details to get personalized recommendations',
-                  action: 'Edit Profile',
-                  url: '/dashboard',
+                  title: 'Start Walkthrough',
+                  description: 'Document property condition with AI guidance',
+                  action: 'Start Now',
+                  url: '/dashboard/walkthrough',
                 },
                 {
-                  icon: '❓',
-                  title: 'Have Questions?',
-                  description: 'Your agent is ready to help 24/7',
-                  action: 'Ask Agent',
-                  url: '/dashboard/buyer-agent',
+                  icon: '📁',
+                  title: 'View Documents',
+                  description: 'Review contracts and AI summaries',
+                  action: 'Open Documents',
+                  url: '/dashboard/documents',
+                },
+                {
+                  icon: '🔧',
+                  title: 'Find Professionals',
+                  description: 'Connect with inspectors, lenders, and more',
+                  action: 'Browse Pros',
+                  url: '/dashboard/professionals',
+                },
+                {
+                  icon: '🏦',
+                  title: 'Mortgage Center',
+                  description: 'Compare rates and track pre-approval',
+                  action: 'View Rates',
+                  url: '/dashboard/mortgage',
                 },
               ].map((step) => (
                 <Link

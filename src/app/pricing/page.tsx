@@ -17,24 +17,27 @@ const plans = [
     ],
     limitations: [
       'Limited AI chat (20 messages/month)',
-      'No offer assistance',
+      'No walkthrough tools',
+      'No document center',
       'No human expert access',
     ],
     cta: 'Start Free',
     highlighted: false,
   },
   {
-    name: 'Buyer',
-    price: '$49',
+    name: 'Premium',
+    price: '$79',
     period: '/month',
-    description: 'Full AI agent support for active buyers',
+    description: 'Full AI agent + complete transaction tools',
     features: [
       'Unlimited AI chat & analysis',
-      'Comprehensive market reports',
-      'Unlimited saved properties',
+      'AI-Guided Walkthroughs',
+      'Document Command Center',
+      'E-Signature integration',
+      'Proactive AI Advisor',
+      'Professionals Marketplace',
+      'Mortgage Rate Comparison',
       'Offer strategy & preparation',
-      'Negotiation guidance',
-      'Document review assistance',
       'Priority support',
     ],
     limitations: [],
@@ -43,17 +46,18 @@ const plans = [
     badge: 'Most Popular',
   },
   {
-    name: 'Buyer Pro',
-    price: '$199',
+    name: 'Premium Pro',
+    price: '$299',
     period: '/transaction',
-    description: 'Full-service with human expert backup',
+    description: 'Everything + human experts on call',
     features: [
-      'Everything in Buyer plan',
+      'Everything in Premium',
       'Dedicated human agent backup',
       'Licensed agent offer review',
       'Contract negotiation support',
       'Closing coordination',
-      'Post-purchase support (30 days)',
+      'Home warranty included',
+      'Post-purchase support (90 days)',
     ],
     limitations: [],
     cta: 'Get Started',
@@ -61,10 +65,37 @@ const plans = [
   },
 ];
 
+const addOns = [
+  {
+    name: 'Home Inspection Coordination',
+    price: '$49',
+    description: 'We schedule and coordinate inspectors from our vetted network',
+    icon: '🔍',
+  },
+  {
+    name: 'Legal Document Review',
+    price: '$149',
+    description: 'Real estate attorney reviews all contracts before signing',
+    icon: '⚖️',
+  },
+  {
+    name: 'Moving Concierge',
+    price: '$99',
+    description: 'Full-service moving coordination with vetted movers',
+    icon: '📦',
+  },
+  {
+    name: 'Home Setup Package',
+    price: '$79',
+    description: 'Utility transfers, service setup, and new homeowner checklist',
+    icon: '🏠',
+  },
+];
+
 export default function PricingPage() {
   const [homePrice, setHomePrice] = useState(500000);
   const traditionalCommission = homePrice * 0.03;
-  const aiCost = 199;
+  const aiCost = 299;
   const savings = traditionalCommission - aiCost;
 
   return (
@@ -161,8 +192,35 @@ export default function PricingPage() {
         </div>
       </section>
 
+      {/* Pro Add-Ons */}
+      <section className="py-16 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Pro Add-Ons</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Enhance your experience with optional services. Available with any paid plan.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {addOns.map((addon) => (
+              <div
+                key={addon.name}
+                className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-100"
+              >
+                <div className="text-3xl mb-3">{addon.icon}</div>
+                <h3 className="font-semibold text-gray-900 mb-2">{addon.name}</h3>
+                <p className="text-gray-600 text-sm mb-4">{addon.description}</p>
+                <p className="text-2xl font-bold text-blue-600">{addon.price}</p>
+                <p className="text-gray-500 text-xs">one-time</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Savings Calculator */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Calculate Your Savings</h2>
@@ -233,23 +291,29 @@ export default function PricingPage() {
                   <tr className="bg-gray-50">
                     <th className="px-6 py-4 text-left text-gray-900 font-semibold">Feature</th>
                     <th className="px-6 py-4 text-center text-gray-900 font-semibold">Free</th>
-                    <th className="px-6 py-4 text-center text-gray-900 font-semibold bg-blue-50">Buyer</th>
-                    <th className="px-6 py-4 text-center text-gray-900 font-semibold">Buyer Pro</th>
+                    <th className="px-6 py-4 text-center text-gray-900 font-semibold bg-blue-50">Premium</th>
+                    <th className="px-6 py-4 text-center text-gray-900 font-semibold">Premium Pro</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {[
-                    { feature: 'AI Property Search', free: true, buyer: true, pro: true },
-                    { feature: 'Market Analysis', free: 'Basic', buyer: true, pro: true },
-                    { feature: 'AI Chat Messages', free: '20/mo', buyer: 'Unlimited', pro: 'Unlimited' },
-                    { feature: 'Saved Properties', free: '10', buyer: 'Unlimited', pro: 'Unlimited' },
-                    { feature: 'Offer Preparation', free: false, buyer: true, pro: true },
-                    { feature: 'Negotiation Strategy', free: false, buyer: true, pro: true },
-                    { feature: 'Document Review', free: false, buyer: true, pro: true },
-                    { feature: 'Human Agent Backup', free: false, buyer: false, pro: true },
-                    { feature: 'Licensed Agent Review', free: false, buyer: false, pro: true },
-                    { feature: 'Closing Support', free: false, buyer: false, pro: true },
-                    { feature: 'Support', free: 'Email', buyer: 'Priority', pro: 'Dedicated' },
+                    { feature: 'AI Property Search', free: true, premium: true, pro: true },
+                    { feature: 'Market Analysis', free: 'Basic', premium: true, pro: true },
+                    { feature: 'AI Chat Messages', free: '20/mo', premium: 'Unlimited', pro: 'Unlimited' },
+                    { feature: 'Saved Properties', free: '10', premium: 'Unlimited', pro: 'Unlimited' },
+                    { feature: 'AI-Guided Walkthroughs', free: false, premium: true, pro: true },
+                    { feature: 'Document Command Center', free: false, premium: true, pro: true },
+                    { feature: 'E-Signature Integration', free: false, premium: true, pro: true },
+                    { feature: 'Proactive AI Advisor', free: false, premium: true, pro: true },
+                    { feature: 'Professionals Marketplace', free: false, premium: true, pro: true },
+                    { feature: 'Mortgage Rate Comparison', free: false, premium: true, pro: true },
+                    { feature: 'Offer Preparation', free: false, premium: true, pro: true },
+                    { feature: 'Negotiation Strategy', free: false, premium: true, pro: true },
+                    { feature: 'Human Agent Backup', free: false, premium: false, pro: true },
+                    { feature: 'Licensed Agent Review', free: false, premium: false, pro: true },
+                    { feature: 'Closing Coordination', free: false, premium: false, pro: true },
+                    { feature: 'Home Warranty Included', free: false, premium: false, pro: true },
+                    { feature: 'Support', free: 'Email', premium: 'Priority', pro: 'Dedicated' },
                   ].map((row) => (
                     <tr key={row.feature}>
                       <td className="px-6 py-4 text-gray-900">{row.feature}</td>
@@ -263,12 +327,12 @@ export default function PricingPage() {
                         )}
                       </td>
                       <td className="px-6 py-4 text-center bg-blue-50">
-                        {row.buyer === true ? (
+                        {row.premium === true ? (
                           <span className="text-green-500">✓</span>
-                        ) : row.buyer === false ? (
+                        ) : row.premium === false ? (
                           <span className="text-gray-300">—</span>
                         ) : (
-                          <span className="text-gray-600 text-sm">{row.buyer}</span>
+                          <span className="text-gray-600 text-sm">{row.premium}</span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-center">
