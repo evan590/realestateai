@@ -20,6 +20,7 @@ export default function Home() {
               <Link href="/meet-your-agent" className="text-slate-300 hover:text-white transition-colors">Meet Your Agent</Link>
               <Link href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</Link>
               <Link href="/trust" className="text-slate-300 hover:text-white transition-colors">Trust & Security</Link>
+              <Link href="/pitch-deck.html" className="text-slate-300 hover:text-white transition-colors">Pitch Deck</Link>
               <Link href="/sign-in" className="text-slate-300 hover:text-white transition-colors">Sign In</Link>
               <Link href="/sign-up" className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                 Meet Your AI Agent
