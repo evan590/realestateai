@@ -9,6 +9,7 @@ import { formatPrice } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
+import { ArrowLeft } from '@/lib/icons';
 
 export default function ListingDetailPage() {
   const params = useParams();
@@ -59,9 +60,7 @@ export default function ListingDetailPage() {
         href="/dashboard/seller/listings"
         className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
+        <ArrowLeft className="w-4 h-4" />
         Back to Listings
       </Link>
 

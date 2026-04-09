@@ -6,6 +6,7 @@ import { PropertyFilters } from '@/components/property/PropertyFilters';
 import { usePropertySearch } from '@/lib/hooks/use-properties';
 import { PropertyFilters as Filters, PropertySearchParams } from '@/types';
 import { Button } from '@/components/ui/Button';
+import { Search, Grid3X3, List, AlertTriangle, Bot } from '@/lib/icons';
 
 type SortOption = 'price_asc' | 'price_desc' | 'newest' | 'sqft';
 
@@ -85,7 +86,7 @@ export default function SearchPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
           >
             <option value="newest">Newest</option>
             <option value="price_asc">Price: Low to High</option>
@@ -94,22 +95,18 @@ export default function SearchPage() {
           </select>
 
           {/* View toggle */}
-          <div className="flex items-center bg-slate-800 border border-slate-700 rounded-lg p-1">
+          <div className="flex items-center bg-white/5 border border-white/10 rounded-lg p-1">
             <button
               onClick={() => setViewMode('grid')}
               className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-emerald-500 text-white' : 'text-slate-400 hover:text-white'}`}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-              </svg>
+              <Grid3X3 className="w-5 h-5" />
             </button>
             <button
               onClick={() => setViewMode('list')}
               className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-emerald-500 text-white' : 'text-slate-400 hover:text-white'}`}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
+              <List className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -123,7 +120,7 @@ export default function SearchPage() {
             : 'space-y-4'
         }>
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="bg-slate-800/50 border border-slate-700/50 rounded-xl overflow-hidden animate-pulse">
+            <div key={i} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden animate-pulse">
               <div className="h-48 bg-slate-700" />
               <div className="p-4 space-y-3">
                 <div className="h-6 bg-slate-700 rounded w-2/3" />
@@ -143,9 +140,7 @@ export default function SearchPage() {
       {error && !isLoading && (
         <div className="text-center py-12">
           <div className="w-16 h-16 mx-auto mb-4 bg-red-500/10 rounded-full flex items-center justify-center">
-            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
+            <AlertTriangle className="w-8 h-8 text-red-400" />
           </div>
           <h3 className="text-lg font-medium text-white mb-2">Search Error</h3>
           <p className="text-slate-400 mb-4">{error}</p>
@@ -193,10 +188,8 @@ export default function SearchPage() {
       {/* Empty state */}
       {!isLoading && !error && properties.length === 0 && (
         <div className="text-center py-12">
-          <div className="w-16 h-16 mx-auto mb-4 bg-slate-800 rounded-full flex items-center justify-center">
-            <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+          <div className="w-16 h-16 mx-auto mb-4 bg-white/5 rounded-full flex items-center justify-center">
+            <Search className="w-8 h-8 text-slate-500" />
           </div>
           <h3 className="text-lg font-medium text-white mb-2">No properties found</h3>
           <p className="text-slate-400 mb-4">Try adjusting your filters to see more results</p>
@@ -211,9 +204,7 @@ export default function SearchPage() {
         <div className="bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-xl p-6">
           <div className="flex items-start gap-4">
             <div className="p-2 bg-emerald-500/10 rounded-lg">
-              <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
+              <Bot className="w-6 h-6 text-emerald-400" />
             </div>
             <div>
               <h4 className="font-medium text-emerald-400 mb-1">AI Buyer Agent Tip</h4>

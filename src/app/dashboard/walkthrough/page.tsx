@@ -12,6 +12,13 @@ import {
   calculateOverallRisk,
   calculateTotalRepairCosts,
 } from '@/lib/walkthrough';
+import { iconMap, Check, AlertTriangle, AlertCircle, Mic, Camera, DollarSign, Lightbulb, Search, Bot } from '@/lib/icons';
+import type { LucideIcon } from '@/lib/icons';
+
+function IconByName({ name, className }: { name: string; className?: string }) {
+  const Icon = iconMap[name] || iconMap.Circle;
+  return <Icon className={className} />;
+}
 
 export default function WalkthroughPage() {
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
@@ -151,7 +158,7 @@ export default function WalkthroughPage() {
                   </p>
                 </div>
                 {selectedProperty === prop.id && (
-                  <span className="text-emerald-400">✓</span>
+                  <Check className="w-5 h-5 text-emerald-400" />
                 )}
               </button>
             ))}
@@ -167,7 +174,7 @@ export default function WalkthroughPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {rooms.map(room => (
                 <div key={room.id} className="bg-slate-700/50 rounded-lg p-3 text-center">
-                  <span className="text-2xl">{room.icon}</span>
+                  <IconByName name={room.icon} className="w-6 h-6 text-emerald-400 mx-auto" />
                   <p className="text-white text-sm mt-1">{room.name}</p>
                   <p className="text-slate-400 text-xs">{room.items.length} items</p>
                 </div>
@@ -177,7 +184,7 @@ export default function WalkthroughPage() {
         )}
 
         <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-6 mb-6">
-          <h3 className="text-emerald-400 font-semibold mb-2">🎤 Voice-Enabled Walkthrough</h3>
+          <h3 className="text-emerald-400 font-semibold mb-2 flex items-center gap-2"><Mic className="w-5 h-5" /> Voice-Enabled Walkthrough</h3>
           <p className="text-slate-300 text-sm">
             Enable voice mode to talk hands-free while walking through the property.
             Your AI agent will guide you room by room and record your observations.
@@ -244,7 +251,7 @@ export default function WalkthroughPage() {
         {/* Critical Issues */}
         {criticalItems.length > 0 && (
           <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 mb-6">
-            <h2 className="text-red-400 font-semibold mb-4">🚨 Critical Issues ({criticalItems.length})</h2>
+            <h2 className="text-red-400 font-semibold mb-4 flex items-center gap-2"><AlertCircle className="w-5 h-5" /> Critical Issues ({criticalItems.length})</h2>
             <div className="space-y-3">
               {criticalItems.map(item => (
                 <div key={item.id} className="bg-slate-800 rounded-xl p-4">
@@ -260,7 +267,7 @@ export default function WalkthroughPage() {
                     )}
                   </div>
                   {item.negotiationLeverage && (
-                    <p className="text-emerald-400 text-sm mt-2">💡 {item.negotiationLeverage}</p>
+                    <p className="text-emerald-400 text-sm mt-2 flex items-center gap-1"><Lightbulb className="w-3 h-3" /> {item.negotiationLeverage}</p>
                   )}
                 </div>
               ))}
@@ -271,7 +278,7 @@ export default function WalkthroughPage() {
         {/* Warning Issues */}
         {warningItems.length > 0 && (
           <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-2xl p-6 mb-6">
-            <h2 className="text-yellow-400 font-semibold mb-4">⚠️ Worth Monitoring ({warningItems.length})</h2>
+            <h2 className="text-yellow-400 font-semibold mb-4 flex items-center gap-2"><AlertTriangle className="w-5 h-5" /> Worth Monitoring ({warningItems.length})</h2>
             <div className="space-y-3">
               {warningItems.map(item => (
                 <div key={item.id} className="bg-slate-800 rounded-xl p-4">
@@ -306,7 +313,7 @@ export default function WalkthroughPage() {
           <div className="space-y-3">
             {criticalItems.length > 0 && (
               <div className="p-4 bg-slate-700/50 rounded-xl">
-                <p className="text-white">🔍 <strong>Get Professional Inspections</strong></p>
+                <p className="text-white flex items-center gap-1"><Search className="w-4 h-4" /> <strong>Get Professional Inspections</strong></p>
                 <p className="text-slate-400 text-sm mt-1">
                   Based on the critical issues found, I recommend getting a professional inspection before proceeding.
                 </p>
@@ -316,14 +323,14 @@ export default function WalkthroughPage() {
               </div>
             )}
             <div className="p-4 bg-slate-700/50 rounded-xl">
-              <p className="text-white">💰 <strong>Negotiation Strategy</strong></p>
+              <p className="text-white flex items-center gap-1"><DollarSign className="w-4 h-4" /> <strong>Negotiation Strategy</strong></p>
               <p className="text-slate-400 text-sm mt-1">
                 Use the estimated repair costs (${repairCosts.min.toLocaleString()} - ${repairCosts.max.toLocaleString()}) as leverage to negotiate the asking price down.
               </p>
             </div>
             {overallRisk === 'low' && (
               <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-                <p className="text-emerald-400">✅ <strong>Good Condition Overall</strong></p>
+                <p className="text-emerald-400 flex items-center gap-1"><Check className="w-4 h-4" /> <strong>Good Condition Overall</strong></p>
                 <p className="text-slate-300 text-sm mt-1">
                   This property appears to be in good condition. You can proceed with confidence to the next steps.
                 </p>
@@ -373,7 +380,7 @@ export default function WalkthroughPage() {
               : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
           }`}
         >
-          <span>🎤</span>
+          <Mic className="w-5 h-5" />
           {isListening ? 'Listening...' : 'Voice Mode'}
         </button>
       </div>
@@ -392,9 +399,9 @@ export default function WalkthroughPage() {
                 : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
             }`}
           >
-            <span>{room.icon}</span>
+            <IconByName name={room.icon} className="w-4 h-4" />
             <span className="text-sm">{room.name}</span>
-            {room.completed && <span>✓</span>}
+            {room.completed && <Check className="w-4 h-4" />}
           </button>
         ))}
       </div>
@@ -417,8 +424,8 @@ export default function WalkthroughPage() {
             >
               <div className="flex items-start justify-between mb-2">
                 <div>
-                  <p className={`font-medium ${getStatusColor(item.status)}`}>
-                    {getStatusIcon(item.status)} {item.name}
+                  <p className={`font-medium ${getStatusColor(item.status)} flex items-center gap-1`}>
+                    <IconByName name={getStatusIcon(item.status)} className="w-4 h-4" /> {item.name}
                   </p>
                   <p className="text-slate-400 text-sm">{item.description}</p>
                 </div>
@@ -434,7 +441,7 @@ export default function WalkthroughPage() {
                       : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
                   }`}
                 >
-                  ✅ Normal
+                  <Check className="w-3 h-3 inline" /> Normal
                 </button>
                 <button
                   onClick={() => updateItemStatus(currentRoom.id, item.id, 'warning')}
@@ -444,7 +451,7 @@ export default function WalkthroughPage() {
                       : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
                   }`}
                 >
-                  ⚠️ Monitor
+                  <AlertTriangle className="w-3 h-3 inline" /> Monitor
                 </button>
                 <button
                   onClick={() => updateItemStatus(currentRoom.id, item.id, 'critical')}
@@ -454,10 +461,10 @@ export default function WalkthroughPage() {
                       : 'bg-slate-600 text-slate-300 hover:bg-slate-500'
                   }`}
                 >
-                  🚨 Red Flag
+                  <AlertCircle className="w-3 h-3 inline" /> Red Flag
                 </button>
                 <button className="px-3 py-1.5 bg-slate-600 text-slate-300 rounded-lg text-sm hover:bg-slate-500">
-                  📷 Photo
+                  <Camera className="w-3 h-3 inline" /> Photo
                 </button>
               </div>
 
@@ -465,10 +472,10 @@ export default function WalkthroughPage() {
               {item.estimatedRepairCost && (
                 <div className="mt-3 p-2 bg-slate-700/50 rounded-lg">
                   <p className="text-slate-300 text-sm">
-                    💰 Est. repair: ${item.estimatedRepairCost.min.toLocaleString()} - ${item.estimatedRepairCost.max.toLocaleString()}
+                    <DollarSign className="w-3 h-3 inline" /> Est. repair: ${item.estimatedRepairCost.min.toLocaleString()} - ${item.estimatedRepairCost.max.toLocaleString()}
                   </p>
                   {item.negotiationLeverage && (
-                    <p className="text-emerald-400 text-sm mt-1">💡 {item.negotiationLeverage}</p>
+                    <p className="text-emerald-400 text-sm mt-1 flex items-center gap-1"><Lightbulb className="w-3 h-3" /> {item.negotiationLeverage}</p>
                   )}
                 </div>
               )}

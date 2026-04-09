@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { Landmark, Zap, Check, ClipboardList, AlertTriangle, Bot, TrendingUp, Lightbulb, X } from '@/lib/icons';
 
 interface LoanOption {
   id: string;
@@ -30,7 +31,7 @@ const mockLoanOptions: LoanOption[] = [
   {
     id: 'loan-1',
     lender: 'First National Bank',
-    lenderLogo: '🏦',
+    lenderLogo: 'FN',
     type: '30-Year Fixed',
     rate: 6.75,
     apr: 6.92,
@@ -44,7 +45,7 @@ const mockLoanOptions: LoanOption[] = [
   {
     id: 'loan-2',
     lender: 'Credit Union Plus',
-    lenderLogo: '🏧',
+    lenderLogo: 'CU',
     type: '30-Year Fixed',
     rate: 6.625,
     apr: 6.85,
@@ -56,7 +57,7 @@ const mockLoanOptions: LoanOption[] = [
   {
     id: 'loan-3',
     lender: 'Quicken Loans',
-    lenderLogo: '⚡',
+    lenderLogo: 'QL',
     type: '30-Year Fixed',
     rate: 6.875,
     apr: 7.05,
@@ -68,7 +69,7 @@ const mockLoanOptions: LoanOption[] = [
   {
     id: 'loan-4',
     lender: 'First National Bank',
-    lenderLogo: '🏦',
+    lenderLogo: 'FN',
     type: '15-Year Fixed',
     rate: 6.0,
     apr: 6.15,
@@ -80,7 +81,7 @@ const mockLoanOptions: LoanOption[] = [
   {
     id: 'loan-5',
     lender: 'Navy Federal',
-    lenderLogo: '⚓',
+    lenderLogo: 'NL',
     type: 'VA Loan',
     rate: 6.25,
     apr: 6.45,
@@ -137,7 +138,7 @@ export default function MortgagePage() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-3">
-            <span className="text-3xl">🏦</span>
+            <Landmark className="w-8 h-8 text-emerald-400" />
             <h1 className="text-3xl font-bold text-white">Mortgage Center</h1>
           </div>
           <button
@@ -164,7 +165,7 @@ export default function MortgagePage() {
             <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl ${
               preApproval.status === 'approved' ? 'bg-emerald-500/20' : 'bg-slate-700'
             }`}>
-              {preApproval.status === 'approved' ? '✅' : '📋'}
+              {preApproval.status === 'approved' ? <Check className="w-5 h-5 text-emerald-400 inline" /> : <ClipboardList className="w-5 h-5 text-slate-400 inline" />}
             </div>
             <div>
               <div className="flex items-center space-x-3 mb-2">
@@ -238,7 +239,7 @@ export default function MortgagePage() {
               onClick={() => setShowCalculator(false)}
               className="text-slate-400 hover:text-white"
             >
-              ✕
+              <X className="w-5 h-5" />
             </button>
           </div>
 
@@ -338,7 +339,7 @@ export default function MortgagePage() {
               {downPaymentPercent < 20 && (
                 <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
                   <p className="text-yellow-400 text-sm">
-                    ⚠️ With less than 20% down, you'll likely need PMI (Private Mortgage Insurance),
+                    With less than 20% down, you'll likely need PMI (Private Mortgage Insurance),
                     adding ~$100-200/month to your payment.
                   </p>
                 </div>
@@ -389,23 +390,23 @@ export default function MortgagePage() {
       {/* AI Insights */}
       <div className="bg-gradient-to-br from-blue-900/30 to-slate-800 border border-blue-700/30 rounded-xl p-6">
         <div className="flex items-start space-x-4">
-          <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-xl">
-            🤖
+          <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+            <Bot className="w-5 h-5 text-blue-400" />
           </div>
           <div>
             <h3 className="text-lg font-semibold text-white mb-2">AI Rate Insights</h3>
             <div className="space-y-3 text-slate-300 text-sm">
               <p>
-                📈 <strong>Rate Trend:</strong> Mortgage rates have stabilized this week. Based on
+                <strong>Rate Trend:</strong> Mortgage rates have stabilized this week. Based on
                 Fed signals, rates may remain steady through Q1 2024.
               </p>
               <p>
-                💡 <strong>Recommendation:</strong> With your pre-approval amount of $550,000 and
+                <strong>Recommendation:</strong> With your pre-approval amount of $550,000 and
                 target home price of $485,000, you have comfortable headroom. Consider locking
                 your rate once your offer is accepted.
               </p>
               <p>
-                ⏰ <strong>Timing:</strong> Rate locks typically last 30-60 days. Given your
+                <strong>Timing:</strong> Rate locks typically last 30-60 days. Given your
                 timeline, a 45-day lock would provide flexibility without significant cost.
               </p>
             </div>
@@ -418,10 +419,10 @@ export default function MortgagePage() {
         <h2 className="text-lg font-semibold text-white mb-4">Our Lender Partners</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { name: 'First National Bank', logo: '🏦', feature: 'First-Time Buyer Specialist' },
-            { name: 'Credit Union Plus', logo: '🏧', feature: 'Member Rates' },
-            { name: 'Quicken Loans', logo: '⚡', feature: 'Fast Closing' },
-            { name: 'Navy Federal', logo: '⚓', feature: 'VA Loan Experts' },
+            { name: 'First National Bank', logo: 'FN', feature: 'First-Time Buyer Specialist' },
+            { name: 'Credit Union Plus', logo: 'CU', feature: 'Member Rates' },
+            { name: 'Quicken Loans', logo: 'QL', feature: 'Fast Closing' },
+            { name: 'Navy Federal', logo: 'NF', feature: 'VA Loan Experts' },
           ].map(lender => (
             <Link
               key={lender.name}
@@ -509,7 +510,7 @@ function LoanCard({
 
       {loan.aiRecommended && loan.aiReason && (
         <div className="pt-3 border-t border-slate-700">
-          <p className="text-emerald-300 text-xs">🤖 {loan.aiReason}</p>
+          <p className="text-emerald-300 text-xs flex items-center gap-1"><Bot className="w-3 h-3" /> {loan.aiReason}</p>
         </div>
       )}
 

@@ -10,6 +10,8 @@ import {
   deleteConversation,
   Conversation,
 } from '@/lib/conversation-store';
+import { AgentAvatar } from '@/components/ui/AgentAvatar';
+import { Check, Star, X } from '@/lib/icons';
 
 export default function BuyerAgentPage() {
   const [selectedAgentId, setSelectedAgentId] = useState('alex');
@@ -54,11 +56,9 @@ export default function BuyerAgentPage() {
         {/* Chat area */}
         <div className="lg:col-span-3 h-full">
           <Card className="h-full flex flex-col" padding="none">
-            <CardHeader className="border-b border-slate-700/50 px-4 py-3">
+            <CardHeader className="border-b border-white/10 px-4 py-3">
               <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 bg-gradient-to-br ${agent.gradientClass} rounded-full flex items-center justify-center`}>
-                  <span className="text-lg">{agent.avatar}</span>
-                </div>
+                <AgentAvatar agentId={agent.id} size="lg" />
                 <div>
                   <CardTitle>{agent.name} — {agent.personality}</CardTitle>
                   <p className="text-sm text-slate-400">{agent.tagline}</p>
@@ -102,13 +102,11 @@ export default function BuyerAgentPage() {
                     }}
                     className={`w-full flex items-center gap-3 p-2 rounded-lg transition-colors ${
                       a.id === selectedAgentId
-                        ? 'bg-slate-700/50 border border-emerald-500/30'
-                        : 'hover:bg-slate-700/30'
+                        ? 'bg-white/5 border border-emerald-500/30'
+                        : 'hover:bg-white/5'
                     }`}
                   >
-                    <div className={`w-8 h-8 bg-gradient-to-br ${a.gradientClass} rounded-full flex items-center justify-center`}>
-                      <span className="text-sm">{a.avatar}</span>
-                    </div>
+                    <AgentAvatar agentId={a.id} size="md" />
                     <div className="text-left">
                       <p className="text-white text-sm font-medium">{a.name}</p>
                       <p className="text-slate-400 text-xs">{a.personality}</p>
@@ -136,7 +134,7 @@ export default function BuyerAgentPage() {
                     <div
                       key={conv.id}
                       className={`group flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-colors ${
-                        conv.id === activeConvId ? 'bg-slate-700/50' : 'hover:bg-slate-700/30'
+                        conv.id === activeConvId ? 'bg-white/5' : 'hover:bg-white/5'
                       }`}
                       onClick={() => setActiveConvId(conv.id)}
                     >
@@ -153,9 +151,7 @@ export default function BuyerAgentPage() {
                         }}
                         className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-all"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <X className="w-4 h-4" />
                       </button>
                     </div>
                   ))}
@@ -173,9 +169,7 @@ export default function BuyerAgentPage() {
               <ul className="space-y-2 text-sm">
                 {agent.specialties.map((s) => (
                   <li key={s} className="flex items-start gap-2">
-                    <svg className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <Check className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" />
                     <span className="text-slate-300">{s}</span>
                   </li>
                 ))}
@@ -183,12 +177,10 @@ export default function BuyerAgentPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-slate-800 to-slate-800/50 border-slate-700">
+          <Card className="bg-gradient-to-br from-slate-800 to-slate-800/50 border-white/10">
             <CardContent>
               <div className="flex items-center gap-2 mb-2">
-                <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-                </svg>
+                <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
                 <span className="text-white font-medium">Pro Tip</span>
               </div>
               <p className="text-slate-400 text-sm">

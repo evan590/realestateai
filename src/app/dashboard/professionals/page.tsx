@@ -11,6 +11,13 @@ import {
   getAIRecommendedProfessionals,
   searchProfessionals,
 } from '@/lib/professionals';
+import { iconMap, Bot, Wrench, Check, X, Shield, Phone, MessageSquare, Calendar, Search } from '@/lib/icons';
+import type { LucideIcon } from '@/lib/icons';
+
+function IconByName({ name, className }: { name: string; className?: string }) {
+  const Icon = iconMap[name] || iconMap.Circle;
+  return <Icon className={className} />;
+}
 
 type FilterCategory = ProfessionalCategory | 'all' | 'ai_recommended';
 
@@ -51,7 +58,7 @@ export default function ProfessionalsPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-3">
-            <span className="text-3xl">🔧</span>
+            <Wrench className="w-8 h-8 text-emerald-400" />
             <h1 className="text-3xl font-bold text-white">Find Professionals</h1>
           </div>
         </div>
@@ -63,8 +70,8 @@ export default function ProfessionalsPage() {
       {/* AI Recommendations Banner */}
       <div className="bg-gradient-to-r from-emerald-900/50 to-slate-800 border border-emerald-700/50 rounded-xl p-6 mb-8">
         <div className="flex items-start space-x-4">
-          <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center text-2xl">
-            🤖
+          <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center">
+            <Bot className="w-6 h-6 text-emerald-400" />
           </div>
           <div className="flex-1">
             <h2 className="text-lg font-semibold text-white mb-2">AI Recommendations for You</h2>
@@ -74,10 +81,10 @@ export default function ProfessionalsPage() {
             </p>
             <div className="flex flex-wrap gap-2">
               <span className="px-3 py-1 bg-red-500/20 text-red-300 rounded-full text-sm">
-                🚨 Electrician needed for panel upgrade
+                Electrician needed for panel upgrade
               </span>
               <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm">
-                🔍 Inspector for foundation check
+                Inspector for foundation check
               </span>
             </div>
           </div>
@@ -148,7 +155,7 @@ export default function ProfessionalsPage() {
               : 'bg-slate-800 text-slate-400 hover:text-white'
           }`}
         >
-          <span>🤖</span>
+          <Bot className="w-4 h-4" />
           <span>AI Recommended</span>
         </button>
         {(Object.keys(categoryLabels) as ProfessionalCategory[]).slice(0, 8).map(category => (
@@ -161,7 +168,7 @@ export default function ProfessionalsPage() {
                 : 'bg-slate-800 text-slate-400 hover:text-white'
             }`}
           >
-            {categoryIcons[category]} {categoryLabels[category]}
+            <IconByName name={categoryIcons[category]} className="w-4 h-4 inline" /> {categoryLabels[category]}
           </button>
         ))}
       </div>
@@ -183,7 +190,7 @@ export default function ProfessionalsPage() {
 
           {filteredPros.length === 0 && (
             <div className="text-center py-12">
-              <span className="text-4xl mb-4 block">🔍</span>
+              <Search className="w-10 h-10 text-slate-500 mx-auto mb-4" />
               <p className="text-slate-400">No professionals found matching your criteria</p>
             </div>
           )}
@@ -232,14 +239,14 @@ function ProfessionalCard({
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center text-2xl">
+          <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center text-sm font-bold text-white">
             {professional.avatar}
           </div>
           <div>
             <div className="flex items-center space-x-2">
               <h3 className="text-white font-semibold">{professional.name}</h3>
               {professional.verified && (
-                <span className="text-emerald-400 text-sm">✓</span>
+                <Check className="w-4 h-4 text-emerald-400" />
               )}
             </div>
             <p className="text-slate-400 text-sm">{professional.company}</p>
@@ -254,7 +261,7 @@ function ProfessionalCard({
 
       <div className="flex items-center space-x-3 mb-3">
         <span className="text-slate-400 text-sm">
-          {categoryIcons[professional.category]} {categoryLabels[professional.category]}
+          <IconByName name={categoryIcons[professional.category]} className="w-4 h-4 inline" /> {categoryLabels[professional.category]}
         </span>
         <span className="text-slate-600">•</span>
         <span className="text-slate-400 text-sm">{professional.distance} mi</span>
@@ -290,7 +297,7 @@ function ProfessionalCard({
       {professional.aiRecommended && professional.aiRecommendReason && (
         <div className="mt-3 pt-3 border-t border-slate-700">
           <p className="text-emerald-300 text-xs">
-            🤖 {professional.aiRecommendReason}
+            <Bot className="w-3 h-3 inline" /> {professional.aiRecommendReason}
           </p>
         </div>
       )}
@@ -315,21 +322,21 @@ function ProfessionalDetail({
       <div className="p-5 border-b border-slate-700">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-3xl">
+            <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center text-lg font-bold text-white">
               {professional.avatar}
             </div>
             <div>
               <div className="flex items-center space-x-2">
                 <h2 className="text-xl font-bold text-white">{professional.name}</h2>
                 {professional.verified && (
-                  <span className="text-emerald-400">✓ Verified</span>
+                  <span className="text-emerald-400 flex items-center gap-1"><Check className="w-4 h-4" /> Verified</span>
                 )}
               </div>
               <p className="text-slate-400">{professional.company}</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-white">
-            ✕
+            <X className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -340,7 +347,7 @@ function ProfessionalDetail({
         {professional.aiRecommended && (
           <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4">
             <div className="flex items-center space-x-2 text-emerald-400 mb-2">
-              <span>🤖</span>
+              <Bot className="w-4 h-4" />
               <span className="font-medium">AI Recommended</span>
             </div>
             <p className="text-slate-300 text-sm">{professional.aiRecommendReason}</p>
@@ -404,7 +411,7 @@ function ProfessionalDetail({
             <div className="space-y-1">
               {professional.licenses.map(license => (
                 <div key={license} className="flex items-center space-x-2 text-sm">
-                  <span className="text-emerald-400">✓</span>
+                  <Check className="w-4 h-4 text-emerald-400" />
                   <span className="text-slate-300">{license}</span>
                 </div>
               ))}
@@ -415,7 +422,7 @@ function ProfessionalDetail({
         {/* Insurance */}
         {professional.insuranceVerified && (
           <div className="flex items-center space-x-2 text-sm">
-            <span className="text-emerald-400">🛡️</span>
+            <Shield className="w-4 h-4 text-emerald-400" />
             <span className="text-slate-300">Insurance Verified</span>
           </div>
         )}
@@ -433,7 +440,7 @@ function ProfessionalDetail({
           onClick={onContact}
           className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
         >
-          <span>📞</span>
+          <Phone className="w-4 h-4" />
           <span>Contact {professional.name.split(' ')[0]}</span>
         </button>
         <div className="grid grid-cols-2 gap-2">
@@ -465,7 +472,7 @@ function ContactModal({
         <div className="p-6 border-b border-slate-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center text-2xl">
+              <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center text-sm font-bold text-white">
                 {professional.avatar}
               </div>
               <div>
@@ -474,7 +481,7 @@ function ContactModal({
               </div>
             </div>
             <button onClick={onClose} className="text-slate-400 hover:text-white">
-              ✕
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -492,7 +499,7 @@ function ContactModal({
                     : 'border-slate-600 text-slate-400 hover:border-slate-500'
                 }`}
               >
-                <span className="text-2xl block mb-1">📞</span>
+                <Phone className="w-6 h-6 mx-auto mb-1" />
                 <span className="text-sm">Call Now</span>
               </button>
               <button
@@ -503,7 +510,7 @@ function ContactModal({
                     : 'border-slate-600 text-slate-400 hover:border-slate-500'
                 }`}
               >
-                <span className="text-2xl block mb-1">💬</span>
+                <MessageSquare className="w-6 h-6 mx-auto mb-1" />
                 <span className="text-sm">Message</span>
               </button>
               <button
@@ -514,7 +521,7 @@ function ContactModal({
                     : 'border-slate-600 text-slate-400 hover:border-slate-500'
                 }`}
               >
-                <span className="text-2xl block mb-1">📅</span>
+                <Calendar className="w-6 h-6 mx-auto mb-1" />
                 <span className="text-sm">Schedule</span>
               </button>
             </div>
@@ -527,7 +534,7 @@ function ContactModal({
                 href={`tel:${professional.phone}`}
                 className="inline-flex items-center space-x-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors"
               >
-                <span>📞</span>
+                <Phone className="w-4 h-4" />
                 <span>{professional.phone}</span>
               </a>
             </div>

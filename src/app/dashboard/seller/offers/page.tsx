@@ -6,6 +6,7 @@ import { SellerOffer, SellerListing } from '@/types';
 import { formatPrice } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { DollarSign, Bot } from '@/lib/icons';
 
 export default function OffersPage() {
   const [offers, setOffers] = useState<SellerOffer[]>([]);
@@ -43,7 +44,9 @@ export default function OffersPage() {
         <Card>
           <CardContent>
             <div className="text-center py-12">
-              <span className="text-4xl mb-4 block">💰</span>
+              <div className="w-16 h-16 mx-auto mb-4 bg-white/5 rounded-full flex items-center justify-center">
+                <DollarSign className="w-8 h-8 text-slate-500" />
+              </div>
               <h3 className="text-lg font-medium text-white mb-2">No offers yet</h3>
               <p className="text-slate-400">Offers will appear here when buyers make them on your listings</p>
             </div>
@@ -102,7 +105,7 @@ export default function OffersPage() {
                     {/* AI Analysis */}
                     {offer.aiAnalysis && (
                       <div className="p-3 bg-gradient-to-r from-amber-500/5 to-orange-500/5 border border-amber-500/20 rounded-lg">
-                        <p className="text-amber-400 text-xs font-medium mb-1">🤖 AI Analysis</p>
+                        <p className="text-amber-400 text-xs font-medium mb-1 flex items-center gap-1"><Bot className="w-3.5 h-3.5" /> AI Analysis</p>
                         <p className="text-slate-300 text-sm">{offer.aiAnalysis}</p>
                       </div>
                     )}

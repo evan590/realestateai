@@ -7,6 +7,7 @@ import { formatPrice } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
+import { Check, ClipboardList } from '@/lib/icons';
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -61,7 +62,9 @@ export default function TransactionsPage() {
         <Card className="border-dashed">
           <CardContent>
             <div className="text-center py-8">
-              <span className="text-4xl mb-4 block">📋</span>
+              <div className="w-16 h-16 mx-auto mb-4 bg-white/5 rounded-full flex items-center justify-center">
+                <ClipboardList className="w-8 h-8 text-slate-500" />
+              </div>
               <h3 className="text-lg font-medium text-white mb-2">No active transactions</h3>
               <p className="text-slate-400 mb-4">Find a property and make an offer to start a transaction</p>
               <div className="flex justify-center gap-3">
@@ -152,7 +155,7 @@ function TransactionCard({ transaction: tx }: { transaction: Transaction }) {
                     ? 'bg-amber-500 text-white animate-pulse'
                     : 'bg-slate-700 text-slate-500'
                 }`}>
-                  {stage.status === 'completed' ? '✓' : i + 1}
+                  {stage.status === 'completed' ? <Check className="w-3 h-3" /> : i + 1}
                 </div>
                 {i < tx.stages.length - 1 && (
                   <div className={`flex-1 h-0.5 mx-1 ${

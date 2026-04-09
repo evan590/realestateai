@@ -6,7 +6,11 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 import { mockProperties } from '@/lib/mock-properties';
-import { agents, getMockActivities, formatActivityTime, getActivityIcon, AgentActivity, Agent } from '@/lib/agents';
+import { agents, getMockActivities, formatActivityTime, AgentActivity, Agent } from '@/lib/agents';
+import { AgentAvatar } from '@/components/ui/AgentAvatar';
+import { StaggerContainer, StaggerItem, FadeIn } from '@/components/ui/AnimatedSection';
+import { Eye, Heart, Bot, DollarSign, MessageSquare, Search, BarChart3, User, Zap, type LucideIcon } from '@/lib/icons';
+import { activityIcons } from '@/lib/icons';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -25,30 +29,30 @@ export default function DashboardPage() {
     setActivities(getMockActivities(selectedAgent.id));
   }, [selectedAgent.id]);
 
-  const stats = [
+  const stats: { label: string; value: string; change: string; icon: LucideIcon }[] = [
     {
       label: 'Properties Viewed',
       value: '12',
       change: '+3 this week',
-      icon: '👁️',
+      icon: Eye,
     },
     {
       label: 'Saved Properties',
       value: '5',
       change: '+2 this week',
-      icon: '❤️',
+      icon: Heart,
     },
     {
       label: 'AI Analyses',
       value: '8',
       change: '+4 this week',
-      icon: '🤖',
+      icon: Bot,
     },
     {
       label: 'Estimated Savings',
       value: '$24,500',
       change: 'vs traditional agent',
-      icon: '💰',
+      icon: DollarSign,
     },
   ];
 
@@ -71,9 +75,7 @@ export default function DashboardPage() {
           href="/dashboard/my-agent"
           className={`flex items-center space-x-3 px-4 py-3 rounded-xl bg-gradient-to-r ${selectedAgent.gradientClass} hover:opacity-90 transition-opacity`}
         >
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-            {selectedAgent.avatar}
-          </div>
+          <AgentAvatar agentId={selectedAgent.id} size="lg" gradient="from-white/20 to-white/10" />
           <div className="text-white">
             <p className="text-sm text-white/80">Your Agent</p>
             <p className="font-semibold">{selectedAgent.name}</p>
@@ -82,22 +84,29 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <Card key={stat.label} className="hover:border-slate-600 transition-colors">
-            <CardContent>
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-slate-400 text-sm">{stat.label}</p>
-                  <p className="text-2xl font-bold text-white mt-1">{stat.value}</p>
-                  <p className="text-emerald-400 text-xs mt-1">{stat.change}</p>
-                </div>
-                <div className="text-3xl">{stat.icon}</div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((stat) => {
+          const IconComp = stat.icon;
+          return (
+            <StaggerItem key={stat.label}>
+              <Card className="bg-white/5 border-white/10 hover:border-white/20 transition-colors">
+                <CardContent>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-slate-400 text-sm">{stat.label}</p>
+                      <p className="text-2xl font-bold text-white mt-1">{stat.value}</p>
+                      <p className="text-emerald-400 text-xs mt-1">{stat.change}</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                      <IconComp className="w-5 h-5 text-emerald-400" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </StaggerItem>
+          );
+        })}
+      </StaggerContainer>
 
       {/* Main content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -107,9 +116,7 @@ export default function DashboardPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${selectedAgent.gradientClass} flex items-center justify-center text-lg`}>
-                  {selectedAgent.avatar}
-                </div>
+                <AgentAvatar agentId={selectedAgent.id} size="md" />
                 <div>
                   <CardTitle>{selectedAgent.name}&apos;s Activity</CardTitle>
                   <p className="text-sm text-slate-500">What your agent has been doing</p>
@@ -127,10 +134,12 @@ export default function DashboardPage() {
                   <div
                     key={activity.id}
                     className={`flex items-start space-x-3 p-3 rounded-lg transition-colors ${
-                      !activity.read ? 'bg-blue-500/10 border border-blue-500/20' : 'hover:bg-slate-700/50'
+                      !activity.read ? 'bg-blue-500/10 border border-blue-500/20' : 'hover:bg-white/5'
                     }`}
                   >
-                    <div className="text-xl">{getActivityIcon(activity.type)}</div>
+                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
+                      {(() => { const AIcon = activityIcons[activity.type] || Bot; return <AIcon className="w-4 h-4 text-slate-400" />; })()}
+                    </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between">
                         <p className={`font-medium ${!activity.read ? 'text-white' : 'text-slate-300'}`}>
@@ -175,7 +184,7 @@ export default function DashboardPage() {
                   <Link
                     key={property.id}
                     href={`/dashboard/properties/${property.id}`}
-                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-slate-700/50 transition-colors group"
+                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors group"
                   >
                     <div
                       className="w-20 h-20 rounded-lg bg-cover bg-center flex-shrink-0"
@@ -212,10 +221,10 @@ export default function DashboardPage() {
         {/* Right sidebar */}
         <div className="space-y-6">
           {/* Next Steps */}
-          <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700">
+          <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-white/10">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <span>✨</span>
+                <Zap className="w-5 h-5 text-amber-400" />
                 <span>Next Steps</span>
               </CardTitle>
             </CardHeader>
@@ -223,21 +232,21 @@ export default function DashboardPage() {
               <div className="space-y-3">
                 {[
                   {
-                    icon: '💬',
+                    icon: MessageSquare,
                     title: 'Chat with your agent',
                     description: 'Get personalized recommendations',
                     url: '/dashboard/buyer-agent',
                     priority: true,
                   },
                   {
-                    icon: '🔍',
+                    icon: Search,
                     title: 'Refine your search',
                     description: 'Update your preferences',
                     url: '/dashboard/search',
                     priority: false,
                   },
                   {
-                    icon: '📊',
+                    icon: BarChart3,
                     title: 'View market report',
                     description: 'Austin housing trends',
                     url: '/dashboard/buyer-agent',
@@ -250,10 +259,10 @@ export default function DashboardPage() {
                     className={`flex items-start space-x-3 p-3 rounded-lg transition-colors ${
                       step.priority
                         ? 'bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20'
-                        : 'hover:bg-slate-700/50'
+                        : 'hover:bg-white/5'
                     }`}
                   >
-                    <span className="text-xl">{step.icon}</span>
+                    {(() => { const SIcon = step.icon; return <SIcon className="w-5 h-5 text-current" />; })()}
                     <div>
                       <p className={`font-medium ${step.priority ? 'text-emerald-400' : 'text-white'}`}>
                         {step.title}
@@ -275,19 +284,19 @@ export default function DashboardPage() {
               <div className="space-y-2">
                 <Link href="/dashboard/my-agent" className="block">
                   <Button variant="secondary" className="w-full justify-start gap-2">
-                    <span>🤖</span>
+                    <Bot className="w-4 h-4" />
                     My Agent Hub
                   </Button>
                 </Link>
                 <Link href="/dashboard/buyer-agent" className="block">
                   <Button variant="ghost" className="w-full justify-start gap-2">
-                    <span>💬</span>
+                    <MessageSquare className="w-4 h-4" />
                     Chat with {selectedAgent.name}
                   </Button>
                 </Link>
                 <Link href="/dashboard/saved" className="block">
                   <Button variant="ghost" className="w-full justify-start gap-2">
-                    <span>❤️</span>
+                    <Heart className="w-4 h-4" />
                     Saved Properties
                   </Button>
                 </Link>
@@ -296,11 +305,11 @@ export default function DashboardPage() {
           </Card>
 
           {/* Human Support */}
-          <Card className="bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600">
+          <Card className="bg-gradient-to-br from-gray-700 to-gray-800 border-white/10">
             <CardContent className="pt-6">
               <div className="flex items-start space-x-3">
-                <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-xl">
-                  👤
+                <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-white">Need Human Help?</h3>

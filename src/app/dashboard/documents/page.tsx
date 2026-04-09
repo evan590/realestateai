@@ -15,6 +15,13 @@ import {
   getDocumentsByCategory,
   searchDocuments,
 } from '@/lib/documents';
+import { iconMap, FolderOpen, FileText, AlertTriangle, PenTool, Bot, Check, X, Pin, ExternalLink } from '@/lib/icons';
+import type { LucideIcon } from '@/lib/icons';
+
+function IconByName({ name, className }: { name: string; className?: string }) {
+  const Icon = iconMap[name] || iconMap.FileText;
+  return <Icon className={className} />;
+}
 
 type ViewMode = 'grid' | 'list';
 type FilterCategory = DocumentCategory | 'all';
@@ -48,7 +55,7 @@ export default function DocumentsPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-3">
-            <span className="text-3xl">📁</span>
+            <FolderOpen className="w-8 h-8 text-emerald-400" />
             <h1 className="text-3xl font-bold text-white">Document Center</h1>
           </div>
           <button
@@ -72,7 +79,7 @@ export default function DocumentsPage() {
               <p className="text-slate-400 text-sm">Total Documents</p>
               <p className="text-2xl font-bold text-white">{documents.length}</p>
             </div>
-            <span className="text-3xl">📄</span>
+            <FileText className="w-8 h-8 text-slate-400" />
           </div>
         </div>
         <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
@@ -81,7 +88,7 @@ export default function DocumentsPage() {
               <p className="text-slate-400 text-sm">Action Required</p>
               <p className="text-2xl font-bold text-yellow-400">{actionRequiredCount}</p>
             </div>
-            <span className="text-3xl">⚠️</span>
+            <AlertTriangle className="w-8 h-8 text-yellow-400" />
           </div>
         </div>
         <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
@@ -90,7 +97,7 @@ export default function DocumentsPage() {
               <p className="text-slate-400 text-sm">Pending Signatures</p>
               <p className="text-2xl font-bold text-blue-400">{pendingSignatures}</p>
             </div>
-            <span className="text-3xl">✍️</span>
+            <PenTool className="w-8 h-8 text-blue-400" />
           </div>
         </div>
         <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
@@ -101,7 +108,7 @@ export default function DocumentsPage() {
                 {documents.filter(d => d.aiSummary).length}
               </p>
             </div>
-            <span className="text-3xl">🤖</span>
+            <Bot className="w-8 h-8 text-emerald-400" />
           </div>
         </div>
       </div>
@@ -154,7 +161,7 @@ export default function DocumentsPage() {
                   : 'bg-slate-800 text-slate-400 hover:text-white'
               }`}
             >
-              {documentCategoryIcons[category]} {documentCategoryLabels[category]}
+              <IconByName name={documentCategoryIcons[category]} className="w-4 h-4 inline" /> {documentCategoryLabels[category]}
             </button>
           ))}
         </div>
@@ -198,7 +205,7 @@ export default function DocumentsPage() {
                 return (
                   <div key={category}>
                     <h2 className="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
-                      <span>{documentCategoryIcons[category]}</span>
+                      <IconByName name={documentCategoryIcons[category]} className="w-5 h-5" />
                       <span>{documentCategoryLabels[category]}</span>
                       <span className="text-slate-500 font-normal">({categoryDocs.length})</span>
                     </h2>
@@ -234,7 +241,7 @@ export default function DocumentsPage() {
 
           {filteredDocuments.length === 0 && (
             <div className="text-center py-12">
-              <span className="text-4xl mb-4 block">📭</span>
+              <FolderOpen className="w-10 h-10 text-slate-500 mx-auto mb-4" />
               <p className="text-slate-400">No documents found</p>
             </div>
           )}
@@ -290,7 +297,7 @@ function DocumentCard({
         }`}
       >
         <div className="flex items-center space-x-4">
-          <span className="text-2xl">{getDocumentIcon(document.type)}</span>
+          <IconByName name={getDocumentIcon(document.type)} className="w-6 h-6 text-slate-300" />
           <div className="flex-1 min-w-0">
             <p className="text-white font-medium truncate">{document.name}</p>
             <p className="text-slate-400 text-sm">
@@ -313,7 +320,7 @@ function DocumentCard({
       }`}
     >
       <div className="flex items-start justify-between mb-3">
-        <span className="text-3xl">{getDocumentIcon(document.type)}</span>
+        <IconByName name={getDocumentIcon(document.type)} className="w-8 h-8 text-slate-300" />
         <span className={`px-2 py-1 rounded-full text-xs border ${statusBadge.color}`}>
           {statusBadge.label}
         </span>
@@ -329,7 +336,7 @@ function DocumentCard({
       {document.aiSummary && (
         <div className="mt-3 pt-3 border-t border-slate-700">
           <div className="flex items-center space-x-1 text-emerald-400 text-xs mb-1">
-            <span>🤖</span>
+            <Bot className="w-4 h-4" />
             <span>AI Summary Available</span>
           </div>
         </div>
@@ -356,7 +363,7 @@ function DocumentPreview({
       <div className="p-4 border-b border-slate-700">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
-            <span className="text-3xl">{getDocumentIcon(document.type)}</span>
+            <IconByName name={getDocumentIcon(document.type)} className="w-8 h-8 text-slate-300" />
             <div>
               <h2 className="text-white font-semibold">{document.name}</h2>
               <p className="text-slate-400 text-sm">{documentTypeLabels[document.type]}</p>
@@ -366,7 +373,7 @@ function DocumentPreview({
             onClick={onClose}
             className="text-slate-400 hover:text-white"
           >
-            ✕
+            <X className="w-5 h-5" />
           </button>
         </div>
       </div>
@@ -387,7 +394,7 @@ function DocumentPreview({
         {document.aiSummary && (
           <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-4">
             <div className="flex items-center space-x-2 text-emerald-400 mb-2">
-              <span>🤖</span>
+              <Bot className="w-4 h-4" />
               <span className="font-medium">AI Summary</span>
             </div>
             <p className="text-slate-300 text-sm">{document.aiSummary}</p>
@@ -398,7 +405,7 @@ function DocumentPreview({
         {document.importantItems && document.importantItems.length > 0 && (
           <div>
             <h3 className="text-white font-medium mb-2 flex items-center space-x-2">
-              <span>📌</span>
+              <Pin className="w-4 h-4" />
               <span>Important Items</span>
             </h3>
             <ul className="space-y-2">
@@ -416,7 +423,7 @@ function DocumentPreview({
         {document.signers && document.signers.length > 0 && (
           <div>
             <h3 className="text-white font-medium mb-2 flex items-center space-x-2">
-              <span>✍️</span>
+              <PenTool className="w-4 h-4" />
               <span>Signatures</span>
             </h3>
             <div className="space-y-2">
@@ -439,9 +446,9 @@ function DocumentPreview({
                     }`}
                   >
                     {signer.status === 'signed'
-                      ? '✓ Signed'
+                      ? 'Signed'
                       : signer.status === 'declined'
-                      ? '✕ Declined'
+                      ? 'Declined'
                       : 'Pending'}
                   </span>
                 </div>
@@ -472,7 +479,7 @@ function DocumentPreview({
             onClick={onSign}
             className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
           >
-            <span>✍️</span>
+            <PenTool className="w-4 h-4" />
             <span>Sign Document</span>
           </button>
         )}
@@ -485,7 +492,7 @@ function DocumentPreview({
           </button>
         </div>
         <button className="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors flex items-center justify-center space-x-2">
-          <span>📤</span>
+          <ExternalLink className="w-4 h-4" />
           <span>Share Securely</span>
         </button>
       </div>
@@ -503,7 +510,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-white">Upload Document</h2>
             <button onClick={onClose} className="text-slate-400 hover:text-white">
-              ✕
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -519,7 +526,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
                 : 'border-slate-600 hover:border-slate-500'
             }`}
           >
-            <span className="text-4xl mb-4 block">📄</span>
+            <FileText className="w-10 h-10 text-slate-400 mx-auto mb-4" />
             <p className="text-white font-medium mb-2">
               Drag and drop files here
             </p>
@@ -546,7 +553,7 @@ function UploadModal({ onClose }: { onClose: () => void }) {
 
           <div className="mt-6 bg-slate-700/50 rounded-lg p-4">
             <div className="flex items-center space-x-2 text-emerald-400 mb-2">
-              <span>🤖</span>
+              <Bot className="w-4 h-4" />
               <span className="font-medium">AI-Powered Analysis</span>
             </div>
             <p className="text-slate-300 text-sm">
@@ -590,7 +597,7 @@ function SignatureModal({
               <p className="text-slate-400 text-sm">{document.name}</p>
             </div>
             <button onClick={onClose} className="text-slate-400 hover:text-white">
-              ✕
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -599,7 +606,7 @@ function SignatureModal({
           {/* AI Explanation */}
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
             <div className="flex items-center space-x-2 text-blue-400 mb-2">
-              <span>🤖</span>
+              <Bot className="w-4 h-4" />
               <span className="font-medium">AI Explains What You're Signing</span>
             </div>
             <p className="text-slate-300 text-sm mb-3">{document.aiSummary}</p>
@@ -625,7 +632,7 @@ function SignatureModal({
                     : 'border-slate-600 text-slate-400'
                 }`}
               >
-                ⌨️ Type Signature
+                Type Signature
               </button>
               <button
                 onClick={() => setSignatureType('draw')}
@@ -635,7 +642,7 @@ function SignatureModal({
                     : 'border-slate-600 text-slate-400'
                 }`}
               >
-                ✍️ Draw Signature
+                Draw Signature
               </button>
             </div>
           </div>
@@ -704,7 +711,7 @@ function SignatureModal({
             disabled={!typedSignature || !agreed}
             className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-lg transition-colors flex items-center justify-center space-x-2"
           >
-            <span>✍️</span>
+            <PenTool className="w-4 h-4" />
             <span>Sign Document</span>
           </button>
         </div>

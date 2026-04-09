@@ -44,7 +44,7 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
     {
       id: 'exterior',
       name: 'Exterior',
-      icon: '🏠',
+      icon: 'Home',
       completed: false,
       items: [
         { id: 'roof', name: 'Roof Condition', description: 'Check for missing shingles, sagging, or visible damage', status: 'pending' },
@@ -58,7 +58,7 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
     {
       id: 'kitchen',
       name: 'Kitchen',
-      icon: '🍳',
+      icon: 'ChefHat',
       completed: false,
       items: [
         { id: 'appliances', name: 'Appliances', description: 'Check age and condition of all appliances', status: 'pending' },
@@ -72,7 +72,7 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
     {
       id: 'bathrooms',
       name: 'Bathrooms',
-      icon: '🚿',
+      icon: 'Droplets',
       completed: false,
       items: [
         { id: 'water-pressure', name: 'Water Pressure', description: 'Test all faucets and showerheads', status: 'pending' },
@@ -86,7 +86,7 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
     {
       id: 'bedrooms',
       name: 'Bedrooms',
-      icon: '🛏️',
+      icon: 'Bed',
       completed: false,
       items: [
         { id: 'windows', name: 'Windows', description: 'Check operation, seals, and condition', status: 'pending' },
@@ -99,7 +99,7 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
     {
       id: 'electrical',
       name: 'Electrical',
-      icon: '⚡',
+      icon: 'Zap',
       completed: false,
       items: [
         { id: 'panel', name: 'Electrical Panel', description: 'Check brand, age, and capacity', status: 'pending' },
@@ -111,7 +111,7 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
     {
       id: 'plumbing',
       name: 'Plumbing',
-      icon: '🔧',
+      icon: 'Wrench',
       completed: false,
       items: [
         { id: 'water-heater', name: 'Water Heater', description: 'Check age, capacity, and condition', status: 'pending' },
@@ -123,7 +123,7 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
     {
       id: 'hvac',
       name: 'HVAC',
-      icon: '🌡️',
+      icon: 'Thermometer',
       completed: false,
       items: [
         { id: 'ac-unit', name: 'AC Unit', description: 'Check age, brand, and condition', status: 'pending' },
@@ -140,7 +140,7 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
     baseRooms.push({
       id: 'basement',
       name: 'Basement',
-      icon: '🏚️',
+      icon: 'ArrowDown',
       completed: false,
       items: [
         { id: 'water-intrusion', name: 'Water Intrusion Signs', description: 'Look for stains, efflorescence, or mold', status: 'pending' },
@@ -177,7 +177,7 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
     baseRooms.push({
       id: 'attic',
       name: 'Attic',
-      icon: '🏠',
+      icon: 'Home',
       completed: false,
       items: [
         { id: 'insulation', name: 'Insulation', description: 'Check type and depth', status: 'pending' },
@@ -194,13 +194,13 @@ export function getWalkthroughChecklist(propertyType: string, yearBuilt: number,
 export function getStatusIcon(status: WalkthroughItem['status']): string {
   switch (status) {
     case 'normal':
-      return '✅';
+      return 'check';
     case 'warning':
-      return '⚠️';
+      return 'alert-triangle';
     case 'critical':
-      return '🚨';
+      return 'alert-circle';
     default:
-      return '○';
+      return 'circle';
   }
 }
 

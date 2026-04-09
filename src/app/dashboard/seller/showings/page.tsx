@@ -5,6 +5,7 @@ import { getShowings, updateShowing, seedMockSellerData } from '@/lib/seller-sto
 import { Showing } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { Calendar } from '@/lib/icons';
 
 export default function ShowingsPage() {
   const [showings, setShowings] = useState<Showing[]>([]);
@@ -59,7 +60,7 @@ export default function ShowingsPage() {
                         <p className="text-white font-medium">{showing.buyerName}</p>
                         <p className="text-slate-400 text-sm">{showing.buyerEmail}</p>
                         <p className="text-slate-400 text-sm">
-                          📅 {new Date(showing.scheduledAt).toLocaleDateString('en-US', {
+                          <Calendar className="w-3 h-3 inline mr-1" />{new Date(showing.scheduledAt).toLocaleDateString('en-US', {
                             weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
                           })}
                         </p>

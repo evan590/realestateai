@@ -4,6 +4,7 @@ import { Property } from '@/types';
 import { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { Loader2 } from '@/lib/icons';
 
 interface AIInsightsPanelProps {
   property: Property;
@@ -60,26 +61,26 @@ export function AIInsightsPanel({ property }: AIInsightsPanelProps) {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-700/50 rounded-lg p-3">
+            <div className="bg-white/5 rounded-lg p-3">
               <p className="text-slate-400 text-xs mb-1">Price/sqft</p>
               <p className="text-white font-bold">${pricePerSqft}</p>
               <p className={`text-xs ${priceDiff > 0 ? 'text-yellow-400' : 'text-emerald-400'}`}>
                 {priceDiff > 0 ? '+' : ''}{priceDiff.toFixed(1)}% vs market avg
               </p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-3">
+            <div className="bg-white/5 rounded-lg p-3">
               <p className="text-slate-400 text-xs mb-1">Days on Market</p>
               <p className="text-white font-bold">{property.days_on_market || 'N/A'}</p>
               <p className={`text-xs ${(property.days_on_market || 0) > 30 ? 'text-emerald-400' : 'text-slate-400'}`}>
                 {(property.days_on_market || 0) > 30 ? 'Negotiation opportunity' : 'Recently listed'}
               </p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-3">
+            <div className="bg-white/5 rounded-lg p-3">
               <p className="text-slate-400 text-xs mb-1">Investment Score</p>
               <p className="text-white font-bold">7.2/10</p>
               <p className="text-emerald-400 text-xs">Above average</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-3">
+            <div className="bg-white/5 rounded-lg p-3">
               <p className="text-slate-400 text-xs mb-1">Estimated Monthly</p>
               <p className="text-white font-bold">${Math.round((property.price * 0.007) + (property.hoa_fee || 0) + ((property.tax_annual || 0) / 12)).toLocaleString()}</p>
               <p className="text-slate-400 text-xs">Mortgage + HOA + Tax</p>
@@ -97,7 +98,7 @@ export function AIInsightsPanel({ property }: AIInsightsPanelProps) {
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <div className="flex flex-col items-center gap-3">
-                <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
                 <p className="text-slate-400 text-sm">Analyzing property...</p>
               </div>
             </div>
@@ -164,7 +165,7 @@ function RiskItem({ label, level, description }: { label: string; level: 'low' |
   };
 
   return (
-    <div className="flex items-start gap-3 p-3 bg-slate-700/30 rounded-lg">
+    <div className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
       <span className={`px-2 py-0.5 text-xs font-medium rounded-full border ${colors[level]}`}>
         {labels[level]}
       </span>

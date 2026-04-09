@@ -11,6 +11,8 @@ import {
   updateConversationMessage,
   getConversation,
 } from '@/lib/conversation-store';
+import { AgentAvatar } from '@/components/ui/AgentAvatar';
+import { Send, Loader2, Bot } from '@/lib/icons';
 
 interface ChatInterfaceProps {
   agentId?: string;
@@ -26,7 +28,7 @@ interface ChatInterfaceProps {
 export function ChatInterface({
   agentId = 'alex',
   agentName = 'AI Agent',
-  agentAvatar = '🤖',
+  agentAvatar = 'Bot',
   agentGradient = 'from-emerald-400 to-cyan-500',
   conversationId,
   propertyId,
@@ -181,8 +183,8 @@ export function ChatInterface({
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="text-center py-12">
-            <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-br ${agentGradient} rounded-full flex items-center justify-center`}>
-              <span className="text-2xl">{agentAvatar}</span>
+            <div className="mx-auto mb-4">
+              <AgentAvatar agentId={agentId} size="xl" />
             </div>
             <h3 className="text-lg font-semibold text-white mb-2">{agentName}</h3>
             <p className="text-slate-400 mb-6 max-w-md mx-auto">
@@ -196,7 +198,7 @@ export function ChatInterface({
                 <button
                   key={question}
                   onClick={() => setInput(question)}
-                  className="px-3 py-1.5 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-full transition-colors"
+                  className="px-3 py-1.5 text-sm bg-white/5 hover:bg-white/10 text-slate-300 rounded-full transition-colors"
                 >
                   {question}
                 </button>
@@ -218,9 +220,7 @@ export function ChatInterface({
               >
                 {message.role === 'assistant' && (
                   <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-6 h-6 bg-gradient-to-br ${agentGradient} rounded-full flex items-center justify-center`}>
-                      <span className="text-xs">{agentAvatar}</span>
-                    </div>
+                    <AgentAvatar agentId={agentId} size="sm" />
                     <span className="text-emerald-400 text-xs font-medium">{agentName}</span>
                   </div>
                 )}
@@ -238,7 +238,7 @@ export function ChatInterface({
       </div>
 
       {/* Input */}
-      <div className="border-t border-slate-700/50 p-4">
+      <div className="border-t border-white/10 p-4">
         <form onSubmit={handleSubmit} className="flex gap-3">
           <div className="flex-1 relative">
             <Textarea
@@ -258,11 +258,9 @@ export function ChatInterface({
             className="px-4"
           >
             {isStreaming ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
+              <Send className="w-5 h-5" />
             )}
           </Button>
         </form>

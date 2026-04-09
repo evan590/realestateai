@@ -1,18 +1,19 @@
 import { HTMLAttributes, forwardRef } from 'react';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'elevated' | 'outlined';
+  variant?: 'default' | 'elevated' | 'outlined' | 'glass';
   padding?: 'none' | 'sm' | 'md' | 'lg';
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className = '', variant = 'default', padding = 'md', children, ...props }, ref) => {
-    const baseStyles = 'rounded-xl transition-all';
+    const baseStyles = 'rounded-2xl transition-all duration-200';
 
     const variants = {
-      default: 'bg-slate-800/50 border border-slate-700/50',
-      elevated: 'bg-slate-800 border border-slate-700/50 shadow-lg shadow-black/20',
-      outlined: 'bg-transparent border border-slate-700 hover:border-slate-600',
+      default: 'bg-white/5 border border-white/10 backdrop-blur-sm',
+      elevated: 'bg-white/8 border border-white/10 shadow-lg shadow-black/20 backdrop-blur-sm',
+      outlined: 'bg-transparent border border-white/10 hover:border-white/20',
+      glass: 'backdrop-blur-xl bg-white/5 border border-white/10 shadow-lg shadow-black/10',
     };
 
     const paddings = {
@@ -78,7 +79,7 @@ CardContent.displayName = 'CardContent';
 
 export const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className = '', children, ...props }, ref) => (
-    <div ref={ref} className={`mt-4 pt-4 border-t border-slate-700/50 ${className}`} {...props}>
+    <div ref={ref} className={`mt-4 pt-4 border-t border-white/10 ${className}`} {...props}>
       {children}
     </div>
   )

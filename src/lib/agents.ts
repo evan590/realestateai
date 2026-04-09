@@ -4,6 +4,7 @@ export interface Agent {
   id: string;
   name: string;
   avatar: string;
+  iconName: string;
   color: string;
   gradientClass: string;
   personality: string;
@@ -31,7 +32,8 @@ export const agents: Agent[] = [
   {
     id: 'alex',
     name: 'Alex',
-    avatar: '🤖',
+    avatar: 'Bot',
+    iconName: 'Bot',
     color: '#3B82F6',
     gradientClass: 'from-blue-500 to-blue-600',
     personality: 'The Analyst',
@@ -45,7 +47,8 @@ export const agents: Agent[] = [
   {
     id: 'jordan',
     name: 'Jordan',
-    avatar: '🏠',
+    avatar: 'Home',
+    iconName: 'Home',
     color: '#10B981',
     gradientClass: 'from-emerald-500 to-emerald-600',
     personality: 'The Guide',
@@ -59,7 +62,8 @@ export const agents: Agent[] = [
   {
     id: 'sam',
     name: 'Sam',
-    avatar: '⚡',
+    avatar: 'Zap',
+    iconName: 'Zap',
     color: '#8B5CF6',
     gradientClass: 'from-purple-500 to-purple-600',
     personality: 'The Negotiator',
@@ -73,7 +77,8 @@ export const agents: Agent[] = [
   {
     id: 'morgan',
     name: 'Morgan',
-    avatar: '🏷️',
+    avatar: 'Tag',
+    iconName: 'Tag',
     color: '#F59E0B',
     gradientClass: 'from-amber-500 to-orange-600',
     personality: 'The Seller Strategist',
@@ -182,18 +187,18 @@ export function formatActivityTime(date: Date): string {
 export function getActivityIcon(type: AgentActivity['type']): string {
   switch (type) {
     case 'search':
-      return '🔍';
+      return 'Search';
     case 'analysis':
-      return '📊';
+      return 'BarChart3';
     case 'alert':
-      return '🔔';
+      return 'Bell';
     case 'recommendation':
-      return '💡';
+      return 'Lightbulb';
     case 'message':
-      return '💬';
+      return 'MessageSquare';
     case 'update':
-      return '📝';
+      return 'FileEdit';
     default:
-      return '📌';
+      return 'Pin';
   }
 }

@@ -7,6 +7,7 @@ import { formatPrice } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
+import { Tag, Camera } from '@/lib/icons';
 
 export default function SellerListingsPage() {
   const [listings, setListings] = useState<SellerListing[]>([]);
@@ -40,8 +41,8 @@ export default function SellerListingsPage() {
         <Card>
           <CardContent>
             <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 bg-slate-800 rounded-full flex items-center justify-center">
-                <span className="text-3xl">🏷️</span>
+              <div className="w-16 h-16 mx-auto mb-4 bg-white/5 rounded-full flex items-center justify-center">
+                <Tag className="w-8 h-8 text-slate-500" />
               </div>
               <h3 className="text-lg font-medium text-white mb-2">No listings yet</h3>
               <p className="text-slate-400 mb-4">Create your first listing to get started</p>
@@ -67,7 +68,7 @@ export default function SellerListingsPage() {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-slate-500">
-                          <span className="text-2xl">📷</span>
+                          <Camera className="w-6 h-6 text-slate-500" />
                         </div>
                       )}
                     </div>

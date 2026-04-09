@@ -8,6 +8,7 @@ import { formatPrice } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input, Select, Textarea } from '@/components/ui/Input';
+import { Camera, Tag, Check, Zap } from '@/lib/icons';
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
@@ -143,7 +144,7 @@ export default function NewListingPage() {
                   : 'bg-slate-700 text-slate-400'
               }`}
             >
-              {s.num < step ? '✓' : s.num}
+              {s.num < step ? <Check className="w-4 h-4" /> : s.num}
             </button>
             <span className={`text-sm ${s.num === step ? 'text-white' : 'text-slate-500'}`}>{s.label}</span>
             {s.num < 5 && <div className={`flex-1 h-px ${s.num < step ? 'bg-emerald-500' : 'bg-slate-700'}`} />}
@@ -205,7 +206,7 @@ export default function NewListingPage() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-sm font-medium text-slate-300">Description</label>
                   <Button variant="ghost" size="sm" onClick={generateDescription} disabled={isGeneratingDesc}>
-                    {isGeneratingDesc ? 'Generating...' : '✨ AI Generate'}
+                    {isGeneratingDesc ? 'Generating...' : <><Zap className="w-4 h-4 mr-1 inline" /> AI Generate</>}
                   </Button>
                 </div>
                 <Textarea
@@ -231,7 +232,9 @@ export default function NewListingPage() {
           <CardContent>
             <div className="space-y-4">
               <div className="border-2 border-dashed border-slate-700 rounded-xl p-8 text-center">
-                <span className="text-4xl mb-3 block">📷</span>
+                <div className="w-12 h-12 mx-auto mb-3 bg-white/5 rounded-full flex items-center justify-center">
+                  <Camera className="w-6 h-6 text-slate-400" />
+                </div>
                 <p className="text-white font-medium mb-1">Drag & drop photos here</p>
                 <p className="text-slate-400 text-sm mb-4">or click to browse</p>
                 <Button variant="secondary" size="sm">Upload Photos</Button>
@@ -280,13 +283,13 @@ export default function NewListingPage() {
             <div className="space-y-4">
               <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-amber-400 font-medium">🏷️ AI Pricing Analysis</span>
+                  <span className="text-amber-400 font-medium flex items-center gap-1.5"><Tag className="w-4 h-4" /> AI Pricing Analysis</span>
                 </div>
                 <p className="text-slate-300 text-sm mb-3">
                   Let our AI analyze comparable sales and market conditions to suggest an optimal listing price.
                 </p>
                 <Button variant="secondary" size="sm" onClick={generatePricing} disabled={isGeneratingPrice}>
-                  {isGeneratingPrice ? 'Analyzing...' : '✨ Get AI Price Suggestion'}
+                  {isGeneratingPrice ? 'Analyzing...' : <><Zap className="w-4 h-4 mr-1 inline" /> Get AI Price Suggestion</>}
                 </Button>
                 {form.aiSuggestedPrice && (
                   <div className="mt-3 p-3 bg-slate-800/50 rounded-lg">

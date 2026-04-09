@@ -65,12 +65,12 @@ export const documentCategoryLabels: Record<DocumentCategory, string> = {
 };
 
 export const documentCategoryIcons: Record<DocumentCategory, string> = {
-  contracts: '📝',
-  inspections: '🔍',
-  financing: '💰',
-  title: '🏠',
-  disclosures: '📋',
-  reports: '📊',
+  contracts: 'FileEdit',
+  inspections: 'Search',
+  financing: 'DollarSign',
+  title: 'Home',
+  disclosures: 'ClipboardList',
+  reports: 'BarChart3',
 };
 
 export function formatFileSize(bytes: number): string {
@@ -82,23 +82,23 @@ export function formatFileSize(bytes: number): string {
 export function getDocumentIcon(type: DocumentType): string {
   switch (type) {
     case 'purchase_agreement':
-      return '📄';
+      return 'FileText';
     case 'disclosure':
-      return '📋';
+      return 'ClipboardList';
     case 'inspection_report':
-      return '🔍';
+      return 'Search';
     case 'appraisal':
-      return '💲';
+      return 'DollarSign';
     case 'title_report':
-      return '🏠';
+      return 'Home';
     case 'mortgage_docs':
-      return '🏦';
+      return 'Landmark';
     case 'addendum':
-      return '📎';
+      return 'Paperclip';
     case 'walkthrough_report':
-      return '🚶';
+      return 'Footprints';
     default:
-      return '📁';
+      return 'FolderOpen';
   }
 }
 
@@ -172,8 +172,8 @@ export const mockDocuments: Document[] = [
     propertyAddress: '742 Evergreen Terrace, Springfield, IL',
     aiSummary: 'The inspection found the home to be in generally good condition with some maintenance items. Two items were flagged as needing attention before closing.',
     importantItems: [
-      '⚠️ Electrical panel needs upgrading ($2,000-3,500)',
-      '⚠️ GFCI outlets missing in bathrooms (code violation)',
+      '[!] Electrical panel needs upgrading ($2,000-3,500)',
+      '[!] GFCI outlets missing in bathrooms (code violation)',
       'Minor grading issues causing water pooling',
       'Deck boards showing wear - cosmetic',
       'Attic insulation below current code standards',
@@ -191,9 +191,9 @@ export const mockDocuments: Document[] = [
     propertyAddress: '742 Evergreen Terrace, Springfield, IL',
     aiSummary: 'Title is clear with no liens or encumbrances that would prevent transfer. Standard exceptions for utility easements and subdivision restrictions apply.',
     importantItems: [
-      '✅ No outstanding liens or judgments',
-      '✅ Property taxes current through 2023',
-      '✅ HOA dues current (no HOA for this property)',
+      '[OK] No outstanding liens or judgments',
+      '[OK] Property taxes current through 2023',
+      '[OK] HOA dues current (no HOA for this property)',
       'Standard utility easement along rear property line',
       'Subdivision restrictions prohibit commercial use',
     ],
@@ -249,9 +249,9 @@ export const mockDocuments: Document[] = [
     propertyAddress: '742 Evergreen Terrace, Springfield, IL',
     aiSummary: 'AI-guided walkthrough completed with 2 warning items and 0 critical items identified. Overall risk assessment: Low.',
     importantItems: [
-      '✅ 28 items checked across 7 rooms',
-      '⚠️ Kitchen sink shows minor corrosion (cosmetic)',
-      '⚠️ Exterior paint peeling on north side',
+      '[OK] 28 items checked across 7 rooms',
+      '[!] Kitchen sink shows minor corrosion (cosmetic)',
+      '[!] Exterior paint peeling on north side',
       'Estimated repair costs: $500-1,200',
       'Potential negotiation leverage: $1,000',
     ],

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { Bot, DollarSign, BarChart3 } from 'lucide-react';
 
 export default function SignUpPage() {
   const [name, setName] = useState('');
@@ -138,12 +139,12 @@ export default function SignUpPage() {
         {/* Benefits */}
         <div className="mt-6 grid grid-cols-3 gap-4 text-center">
           {[
-            { icon: '🤖', label: 'AI-Powered' },
-            { icon: '💰', label: 'No Commissions' },
-            { icon: '📊', label: 'Data-Driven' },
+            { icon: <Bot className="w-6 h-6" />, label: 'AI-Powered' },
+            { icon: <DollarSign className="w-6 h-6" />, label: 'No Commissions' },
+            { icon: <BarChart3 className="w-6 h-6" />, label: 'Data-Driven' },
           ].map((item) => (
             <div key={item.label} className="text-slate-400 text-xs">
-              <div className="text-2xl mb-1">{item.icon}</div>
+              <div className="text-emerald-400 flex justify-center mb-1">{item.icon}</div>
               {item.label}
             </div>
           ))}

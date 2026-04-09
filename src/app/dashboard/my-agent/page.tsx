@@ -3,6 +3,13 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { agents, Agent, getMockActivities, formatActivityTime, getActivityIcon, AgentActivity } from '@/lib/agents';
+import { iconMap, MessageSquare, Search, Heart, User, Brain, AlertCircle, AlertTriangle, Check, Lightbulb, FileEdit, FolderOpen, Wrench, Landmark, X } from '@/lib/icons';
+import type { LucideIcon } from '@/lib/icons';
+
+function IconByName({ name, className }: { name: string; className?: string }) {
+  const Icon = iconMap[name] || iconMap.Circle;
+  return <Icon className={className} />;
+}
 
 export default function MyAgentPage() {
   const [selectedAgent, setSelectedAgent] = useState<Agent>(agents[0]);
@@ -49,8 +56,8 @@ export default function MyAgentPage() {
             {/* Agent Header */}
             <div className={`bg-gradient-to-br ${selectedAgent.gradientClass} p-6 text-white`}>
               <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-4xl">
-                  {selectedAgent.avatar}
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                  <IconByName name={selectedAgent.avatar} className="w-8 h-8 text-white" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold">{selectedAgent.name}</h2>
@@ -100,7 +107,7 @@ export default function MyAgentPage() {
                   href="/dashboard/buyer-agent"
                   className={`w-full flex items-center justify-center space-x-2 py-3 rounded-lg font-medium transition-colors bg-gradient-to-r ${selectedAgent.gradientClass} text-white hover:opacity-90`}
                 >
-                  <span>💬</span>
+                  <MessageSquare className="w-5 h-5" />
                   <span>Chat with {selectedAgent.name}</span>
                 </Link>
                 <button
@@ -121,7 +128,7 @@ export default function MyAgentPage() {
                 href="/dashboard/search"
                 className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                <span className="text-xl">🔍</span>
+                <Search className="w-5 h-5 text-emerald-400" />
                 <div>
                   <p className="font-medium text-gray-900">Search Properties</p>
                   <p className="text-sm text-gray-500">Find your next home</p>
@@ -131,7 +138,7 @@ export default function MyAgentPage() {
                 href="/dashboard/saved"
                 className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                <span className="text-xl">❤️</span>
+                <Heart className="w-5 h-5 text-red-400" />
                 <div>
                   <p className="font-medium text-gray-900">Saved Properties</p>
                   <p className="text-sm text-gray-500">View your favorites</p>
@@ -140,7 +147,7 @@ export default function MyAgentPage() {
               <button
                 className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors text-left"
               >
-                <span className="text-xl">👤</span>
+                <User className="w-5 h-5 text-slate-400" />
                 <div>
                   <p className="font-medium text-gray-900">Talk to a Human</p>
                   <p className="text-sm text-gray-500">Get expert support</p>
@@ -176,7 +183,7 @@ export default function MyAgentPage() {
                     !activity.read ? 'bg-blue-50' : 'hover:bg-gray-50'
                   }`}
                 >
-                  <div className="text-2xl">{getActivityIcon(activity.type)}</div>
+                  <IconByName name={getActivityIcon(activity.type)} className="w-6 h-6 text-emerald-400" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <div>
@@ -208,7 +215,7 @@ export default function MyAgentPage() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center">
-                  <span className="text-xl">🧠</span>
+                  <Brain className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold">AI Proactive Advisor</h2>
@@ -225,7 +232,7 @@ export default function MyAgentPage() {
               {/* Critical Insight */}
               <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
                 <div className="flex items-start space-x-3">
-                  <span className="text-xl">🚨</span>
+                  <AlertCircle className="w-5 h-5 text-red-400" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium text-red-400 uppercase tracking-wide">Deal-Breaker Alert</span>
@@ -262,7 +269,7 @@ export default function MyAgentPage() {
               {/* Warning Insight */}
               <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
                 <div className="flex items-start space-x-3">
-                  <span className="text-xl">⚠️</span>
+                  <AlertTriangle className="w-5 h-5 text-yellow-400" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium text-yellow-400 uppercase tracking-wide">Investigate</span>
@@ -285,7 +292,7 @@ export default function MyAgentPage() {
               {/* Positive Insight */}
               <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
                 <div className="flex items-start space-x-3">
-                  <span className="text-xl">✅</span>
+                  <Check className="w-5 h-5 text-emerald-400" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium text-emerald-400 uppercase tracking-wide">Good News</span>
@@ -317,7 +324,7 @@ export default function MyAgentPage() {
                 </div>
               </div>
               <p className="text-gray-400 text-sm mt-4">
-                💡 Based on comparable sales and typical seller responses in this market,
+                Based on comparable sales and typical seller responses in this market,
                 I recommend requesting a $3,500 credit rather than asking for repairs. This
                 is within the median credit amount for similar issues.
               </p>
@@ -375,28 +382,28 @@ export default function MyAgentPage() {
             <div className="grid md:grid-cols-2 gap-4">
               {[
                 {
-                  icon: '📝',
+                  icon: 'FileEdit',
                   title: 'Start Walkthrough',
                   description: 'Document property condition with AI guidance',
                   action: 'Start Now',
                   url: '/dashboard/walkthrough',
                 },
                 {
-                  icon: '📁',
+                  icon: 'FolderOpen',
                   title: 'View Documents',
                   description: 'Review contracts and AI summaries',
                   action: 'Open Documents',
                   url: '/dashboard/documents',
                 },
                 {
-                  icon: '🔧',
+                  icon: 'Wrench',
                   title: 'Find Professionals',
                   description: 'Connect with inspectors, lenders, and more',
                   action: 'Browse Pros',
                   url: '/dashboard/professionals',
                 },
                 {
-                  icon: '🏦',
+                  icon: 'Landmark',
                   title: 'Mortgage Center',
                   description: 'Compare rates and track pre-approval',
                   action: 'View Rates',
@@ -408,7 +415,7 @@ export default function MyAgentPage() {
                   href={step.url}
                   className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
                 >
-                  <span className="text-2xl">{step.icon}</span>
+                  <IconByName name={step.icon} className="w-6 h-6 text-emerald-400" />
                   <div>
                     <p className="font-medium text-gray-900">{step.title}</p>
                     <p className="text-sm text-gray-500 mt-1">{step.description}</p>
@@ -423,7 +430,7 @@ export default function MyAgentPage() {
           <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 text-white">
             <div className="flex items-start space-x-4">
               <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-2xl">
-                👤
+                <User className="w-6 h-6" />
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-lg">Need Human Expert Help?</h3>
@@ -451,7 +458,7 @@ export default function MyAgentPage() {
                   onClick={() => setShowChangeAgent(false)}
                   className="text-gray-400 hover:text-gray-600"
                 >
-                  ✕
+                  <X className="w-5 h-5" />
                 </button>
               </div>
               <p className="text-gray-600 mt-1">
@@ -472,8 +479,8 @@ export default function MyAgentPage() {
                   } ${isAssigning ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <div className="flex items-start space-x-4">
-                    <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${agent.gradientClass} flex items-center justify-center text-2xl`}>
-                      {agent.avatar}
+                    <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${agent.gradientClass} flex items-center justify-center`}>
+                      <IconByName name={agent.avatar} className="w-7 h-7 text-white" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
@@ -482,7 +489,7 @@ export default function MyAgentPage() {
                           <p className="text-sm text-blue-600">{agent.personality}</p>
                         </div>
                         {selectedAgent.id === agent.id && (
-                          <span className="text-blue-600">✓ Current</span>
+                          <span className="text-blue-600 flex items-center gap-1"><Check className="w-4 h-4" /> Current</span>
                         )}
                       </div>
                       <p className="text-gray-600 text-sm mt-2">{agent.tagline}</p>

@@ -4,6 +4,9 @@ import { useAuth } from '@/lib/auth-context';
 import { Button } from '@/components/ui/Button';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import {
+  Search, Bell, User, Bot, Settings, LogOut, ChevronDown, X, Check, Menu,
+} from 'lucide-react';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -21,79 +24,57 @@ export function Header({ onMenuClick }: HeaderProps) {
         setShowDropdown(false);
       }
     }
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
     <>
-      <header className="h-16 bg-slate-900/80 backdrop-blur-sm border-b border-slate-800 flex items-center justify-between px-4 md:px-6">
+      <header className="h-16 bg-slate-950/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-4 md:px-6">
         {/* Mobile menu button */}
         <button
           onClick={onMenuClick}
-          className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors mr-2"
+          className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200 mr-2"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <Menu className="w-5 h-5" />
         </button>
 
         {/* Search bar */}
         <div className="flex-1 max-w-xl">
           <div className="relative">
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input
               type="text"
               placeholder="Search properties, addresses, or ask AI..."
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-10 pr-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
+              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200"
             />
           </div>
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-3 ml-6">
+        <div className="flex items-center gap-2 ml-6">
           {/* Human Support Button */}
           <button
             onClick={() => setShowHumanModal(true)}
-            className="flex items-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-slate-300 hover:text-white transition-colors"
+            className="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-slate-300 hover:text-white transition-all duration-200"
           >
-            <span className="text-lg">👤</span>
+            <User className="w-4 h-4" />
             <span className="text-sm font-medium hidden sm:inline">Talk to Human</span>
           </button>
 
           {/* Notifications */}
-          <button className="relative p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
-            <span className="absolute top-1 right-1 w-2 h-2 bg-emerald-400 rounded-full" />
+          <button className="relative p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-200">
+            <Bell className="w-5 h-5" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-400 rounded-full" />
           </button>
 
           {/* User menu */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-3 p-1.5 pr-3 hover:bg-slate-800 rounded-lg transition-colors"
+              className="flex items-center gap-3 p-1.5 pr-3 hover:bg-white/5 rounded-xl transition-all duration-200"
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/20">
                 <span className="text-white font-medium text-sm">
                   {user?.name?.charAt(0).toUpperCase() || 'U'}
                 </span>
@@ -102,58 +83,31 @@ export function Header({ onMenuClick }: HeaderProps) {
                 <p className="text-sm font-medium text-white">{user?.name || 'User'}</p>
                 <p className="text-xs text-slate-400">{user?.email || 'user@email.com'}</p>
               </div>
-              <svg
-                className={`w-4 h-4 text-slate-400 transition-transform ${showDropdown ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+              <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`} />
             </button>
 
             {showDropdown && (
-              <div className="absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl py-1 z-50">
+              <div className="absolute right-0 mt-2 w-48 glass-card-strong py-1 z-50 shadow-xl">
                 <Link
                   href="/dashboard/my-agent"
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
                 >
-                  <span>🤖</span>
+                  <Bot className="w-4 h-4" />
                   My Agent
                 </Link>
                 <Link
                   href="/dashboard/settings"
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
+                  <Settings className="w-4 h-4" />
                   Settings
                 </Link>
-                <hr className="my-1 border-slate-700" />
+                <hr className="my-1 border-white/10" />
                 <button
                   onClick={signOut}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-400 hover:bg-slate-700 transition-colors text-left"
+                  className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-400 hover:bg-white/10 transition-colors text-left"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                    />
-                  </svg>
+                  <LogOut className="w-4 h-4" />
                   Sign out
                 </button>
               </div>
@@ -164,13 +118,13 @@ export function Header({ onMenuClick }: HeaderProps) {
 
       {/* Human Support Modal */}
       {showHumanModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full">
-            <div className="p-6 border-b border-slate-700">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="glass-card-strong max-w-md w-full overflow-hidden">
+            <div className="p-6 border-b border-white/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-2xl">
-                    👤
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <User className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-white">Talk to a Human Expert</h2>
@@ -179,9 +133,9 @@ export function Header({ onMenuClick }: HeaderProps) {
                 </div>
                 <button
                   onClick={() => setShowHumanModal(false)}
-                  className="text-slate-400 hover:text-white"
+                  className="text-slate-400 hover:text-white p-1 hover:bg-white/10 rounded-lg transition-all"
                 >
-                  ✕
+                  <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -191,25 +145,15 @@ export function Header({ onMenuClick }: HeaderProps) {
                 Our licensed real estate experts are available to help with:
               </p>
               <ul className="space-y-2 text-slate-400">
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-400">✓</span>
-                  <span>Complex contract questions</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-400">✓</span>
-                  <span>Offer review and strategy</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-400">✓</span>
-                  <span>Negotiation support</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="text-green-400">✓</span>
-                  <span>Legal and compliance questions</span>
-                </li>
+                {['Complex contract questions', 'Offer review and strategy', 'Negotiation support', 'Legal and compliance questions'].map((item) => (
+                  <li key={item} className="flex items-center space-x-2">
+                    <Check className="w-4 h-4 text-emerald-400" />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
 
-              <div className="bg-slate-700/50 rounded-lg p-4">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4">
                 <div className="flex items-center space-x-2 text-emerald-400 mb-2">
                   <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
                   <span className="text-sm font-medium">Available Now</span>
@@ -220,16 +164,10 @@ export function Header({ onMenuClick }: HeaderProps) {
               </div>
 
               <div className="flex space-x-3">
-                <Button
-                  className="flex-1"
-                  onClick={() => setShowHumanModal(false)}
-                >
+                <Button className="flex-1" onClick={() => setShowHumanModal(false)}>
                   Start Chat with Expert
                 </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => setShowHumanModal(false)}
-                >
+                <Button variant="secondary" onClick={() => setShowHumanModal(false)}>
                   Schedule Call
                 </Button>
               </div>
