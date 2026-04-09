@@ -1,7 +1,7 @@
 'use client';
 
 import { Property } from '@/types';
-import { formatPrice, formatNumber } from '@/lib/mock-properties';
+import { formatPrice, formatNumber } from '@/lib/utils';
 import Link from 'next/link';
 import { useState } from 'react';
 

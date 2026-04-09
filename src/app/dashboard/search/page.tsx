@@ -3,8 +3,8 @@
 import { useState, useMemo } from 'react';
 import { PropertyCard } from '@/components/property/PropertyCard';
 import { PropertyFilters } from '@/components/property/PropertyFilters';
-import { mockProperties, filterProperties } from '@/lib/mock-properties';
-import { PropertyFilters as Filters } from '@/types';
+import { usePropertySearch } from '@/lib/hooks/use-properties';
+import { PropertyFilters as Filters, PropertySearchParams } from '@/types';
 import { Button } from '@/components/ui/Button';
 
 type SortOption = 'price_asc' | 'price_desc' | 'newest' | 'sqft';
@@ -13,32 +13,40 @@ export default function SearchPage() {
   const [filters, setFilters] = useState<Filters>({});
   const [sortBy, setSortBy] = useState<SortOption>('newest');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [page, setPage] = useState(1);
 
-  const filteredProperties = useMemo(() => {
-    let results = filterProperties(mockProperties, filters);
+  const searchParams = useMemo<PropertySearchParams>(
+    () => ({
+      city: filters.city,
+      state: filters.state,
+      minPrice: filters.minPrice,
+      maxPrice: filters.maxPrice,
+      minBeds: filters.minBeds,
+      maxBeds: filters.maxBeds,
+      minBaths: filters.minBaths,
+      maxBaths: filters.maxBaths,
+      minSqft: filters.minSqft,
+      maxSqft: filters.maxSqft,
+      propertyType: filters.propertyType,
+      sort: sortBy,
+      page,
+      limit: 20,
+    }),
+    [filters, sortBy, page]
+  );
 
-    // Sort
-    switch (sortBy) {
-      case 'price_asc':
-        results = [...results].sort((a, b) => a.price - b.price);
-        break;
-      case 'price_desc':
-        results = [...results].sort((a, b) => b.price - a.price);
-        break;
-      case 'newest':
-        results = [...results].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-        break;
-      case 'sqft':
-        results = [...results].sort((a, b) => b.sqft - a.sqft);
-        break;
-    }
-
-    return results;
-  }, [filters, sortBy]);
+  const { data, isLoading, error } = usePropertySearch(searchParams);
+  const properties = data?.properties || [];
+  const total = data?.total || 0;
+  const hasMore = data?.hasMore || false;
 
   const handleSave = (propertyId: string) => {
-    // TODO: Implement save to Supabase
     console.log('Save property:', propertyId);
+  };
+
+  const handleFilterChange = (newFilters: Filters) => {
+    setFilters(newFilters);
+    setPage(1);
   };
 
   return (
@@ -54,15 +62,21 @@ export default function SearchPage() {
       {/* Filters */}
       <PropertyFilters
         filters={filters}
-        onChange={setFilters}
-        onReset={() => setFilters({})}
+        onChange={handleFilterChange}
+        onReset={() => { setFilters({}); setPage(1); }}
       />
 
       {/* Results header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <span className="text-slate-400">
-            <span className="text-white font-medium">{filteredProperties.length}</span> properties found
+            {isLoading ? (
+              'Searching...'
+            ) : (
+              <>
+                <span className="text-white font-medium">{total}</span> properties found
+              </>
+            )}
           </span>
         </div>
 
@@ -101,20 +115,83 @@ export default function SearchPage() {
         </div>
       </div>
 
-      {/* Results grid */}
-      {filteredProperties.length > 0 ? (
-        <div
-          className={
-            viewMode === 'grid'
-              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
-              : 'space-y-4'
-          }
-        >
-          {filteredProperties.map((property) => (
-            <PropertyCard key={property.id} property={property} onSave={handleSave} />
+      {/* Loading state */}
+      {isLoading && (
+        <div className={
+          viewMode === 'grid'
+            ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+            : 'space-y-4'
+        }>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="bg-slate-800/50 border border-slate-700/50 rounded-xl overflow-hidden animate-pulse">
+              <div className="h-48 bg-slate-700" />
+              <div className="p-4 space-y-3">
+                <div className="h-6 bg-slate-700 rounded w-2/3" />
+                <div className="h-4 bg-slate-700 rounded w-1/2" />
+                <div className="h-4 bg-slate-700 rounded w-3/4" />
+                <div className="flex gap-2">
+                  <div className="h-5 bg-slate-700 rounded-full w-16" />
+                  <div className="h-5 bg-slate-700 rounded-full w-16" />
+                </div>
+              </div>
+            </div>
           ))}
         </div>
-      ) : (
+      )}
+
+      {/* Error state */}
+      {error && !isLoading && (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 mx-auto mb-4 bg-red-500/10 rounded-full flex items-center justify-center">
+            <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-medium text-white mb-2">Search Error</h3>
+          <p className="text-slate-400 mb-4">{error}</p>
+        </div>
+      )}
+
+      {/* Results grid */}
+      {!isLoading && !error && properties.length > 0 && (
+        <>
+          <div
+            className={
+              viewMode === 'grid'
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+                : 'space-y-4'
+            }
+          >
+            {properties.map((property) => (
+              <PropertyCard key={property.id} property={property} onSave={handleSave} />
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {(hasMore || page > 1) && (
+            <div className="flex items-center justify-center gap-4 pt-4">
+              <Button
+                variant="secondary"
+                disabled={page <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+              >
+                Previous
+              </Button>
+              <span className="text-slate-400">Page {page}</span>
+              <Button
+                variant="secondary"
+                disabled={!hasMore}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Empty state */}
+      {!isLoading && !error && properties.length === 0 && (
         <div className="text-center py-12">
           <div className="w-16 h-16 mx-auto mb-4 bg-slate-800 rounded-full flex items-center justify-center">
             <svg className="w-8 h-8 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,14 +200,14 @@ export default function SearchPage() {
           </div>
           <h3 className="text-lg font-medium text-white mb-2">No properties found</h3>
           <p className="text-slate-400 mb-4">Try adjusting your filters to see more results</p>
-          <Button variant="secondary" onClick={() => setFilters({})}>
+          <Button variant="secondary" onClick={() => { setFilters({}); setPage(1); }}>
             Clear Filters
           </Button>
         </div>
       )}
 
       {/* AI suggestion */}
-      {filteredProperties.length > 0 && (
+      {!isLoading && properties.length > 0 && (
         <div className="bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20 rounded-xl p-6">
           <div className="flex items-start gap-4">
             <div className="p-2 bg-emerald-500/10 rounded-lg">

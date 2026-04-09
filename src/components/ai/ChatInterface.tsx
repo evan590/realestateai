@@ -1,28 +1,58 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Textarea } from '@/components/ui/Input';
 import { AIMessage } from '@/types';
+import {
+  Conversation,
+  createConversation,
+  addMessage,
+  updateConversationMessage,
+  getConversation,
+} from '@/lib/conversation-store';
 
 interface ChatInterfaceProps {
-  initialMessages?: AIMessage[];
-  onSendMessage?: (message: string) => void;
-  isLoading?: boolean;
+  agentId?: string;
+  agentName?: string;
+  agentAvatar?: string;
+  agentGradient?: string;
+  conversationId?: string;
+  propertyId?: string;
   propertyContext?: string;
+  onConversationCreated?: (conversationId: string) => void;
 }
 
 export function ChatInterface({
-  initialMessages = [],
-  onSendMessage,
-  isLoading = false,
+  agentId = 'alex',
+  agentName = 'AI Agent',
+  agentAvatar = '🤖',
+  agentGradient = 'from-emerald-400 to-cyan-500',
+  conversationId,
+  propertyId,
   propertyContext,
+  onConversationCreated,
 }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<AIMessage[]>(initialMessages);
+  const [messages, setMessages] = useState<AIMessage[]>([]);
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
+  const [currentConvId, setCurrentConvId] = useState(conversationId);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Load conversation messages
+  useEffect(() => {
+    if (conversationId) {
+      const conv = getConversation(conversationId);
+      if (conv) {
+        setMessages(conv.messages);
+        setCurrentConvId(conversationId);
+      }
+    } else {
+      setMessages([]);
+      setCurrentConvId(undefined);
+    }
+  }, [conversationId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -32,9 +62,19 @@ export function ChatInterface({
     scrollToBottom();
   }, [messages]);
 
+  const ensureConversation = useCallback((): string => {
+    if (currentConvId) return currentConvId;
+    const conv = createConversation(agentId, propertyId);
+    setCurrentConvId(conv.id);
+    onConversationCreated?.(conv.id);
+    return conv.id;
+  }, [currentConvId, agentId, propertyId, onConversationCreated]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isStreaming) return;
+
+    const convId = ensureConversation();
 
     const userMessage: AIMessage = {
       id: Date.now().toString(),
@@ -44,8 +84,11 @@ export function ChatInterface({
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    addMessage(convId, userMessage);
     setInput('');
     setIsStreaming(true);
+
+    const assistantId = (Date.now() + 1).toString();
 
     try {
       const response = await fetch('/api/ai/chat', {
@@ -56,27 +99,21 @@ export function ChatInterface({
             role: m.role,
             content: m.content,
           })),
+          agentId,
+          propertyId,
           propertyContext,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
+      if (!response.ok) throw new Error('Failed to get response');
 
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let assistantMessage = '';
 
-      const assistantId = (Date.now() + 1).toString();
       setMessages((prev) => [
         ...prev,
-        {
-          id: assistantId,
-          role: 'assistant',
-          content: '',
-          timestamp: new Date().toISOString(),
-        },
+        { id: assistantId, role: 'assistant', content: '', timestamp: new Date().toISOString() },
       ]);
 
       if (reader) {
@@ -94,18 +131,31 @@ export function ChatInterface({
           );
         }
       }
-    } catch (error) {
-      // Use mock response if API fails
-      const mockResponse = getMockResponse(input);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          role: 'assistant',
-          content: mockResponse,
-          timestamp: new Date().toISOString(),
-        },
-      ]);
+
+      // Save final assistant message
+      const finalMsg: AIMessage = {
+        id: assistantId,
+        role: 'assistant',
+        content: assistantMessage,
+        timestamp: new Date().toISOString(),
+      };
+      addMessage(convId, finalMsg);
+    } catch {
+      const mockResponse = getFallbackResponse(input);
+      const errorMsg: AIMessage = {
+        id: assistantId,
+        role: 'assistant',
+        content: mockResponse,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages((prev) => {
+        const existing = prev.find((m) => m.id === assistantId);
+        if (existing) {
+          return prev.map((m) => (m.id === assistantId ? errorMsg : m));
+        }
+        return [...prev, errorMsg];
+      });
+      addMessage(convId, errorMsg);
     } finally {
       setIsStreaming(false);
     }
@@ -131,14 +181,12 @@ export function ChatInterface({
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
+            <div className={`w-16 h-16 mx-auto mb-4 bg-gradient-to-br ${agentGradient} rounded-full flex items-center justify-center`}>
+              <span className="text-2xl">{agentAvatar}</span>
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">AI Buyer Agent</h3>
+            <h3 className="text-lg font-semibold text-white mb-2">{agentName}</h3>
             <p className="text-slate-400 mb-6 max-w-md mx-auto">
-              I&apos;m your unbiased real estate AI assistant. Ask me anything about buying property,
+              I&apos;m your AI real estate assistant. Ask me anything about buying or selling property,
               market analysis, or get advice on specific listings.
             </p>
 
@@ -170,10 +218,10 @@ export function ChatInterface({
               >
                 {message.role === 'assistant' && (
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-6 h-6 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">AI</span>
+                    <div className={`w-6 h-6 bg-gradient-to-br ${agentGradient} rounded-full flex items-center justify-center`}>
+                      <span className="text-xs">{agentAvatar}</span>
                     </div>
-                    <span className="text-emerald-400 text-xs font-medium">Buyer Agent</span>
+                    <span className="text-emerald-400 text-xs font-medium">{agentName}</span>
                   </div>
                 )}
                 <div className="whitespace-pre-wrap text-sm leading-relaxed">
@@ -226,96 +274,13 @@ export function ChatInterface({
   );
 }
 
-function getMockResponse(input: string): string {
-  const lowercaseInput = input.toLowerCase();
-
-  if (lowercaseInput.includes('first home') || lowercaseInput.includes('first-time')) {
-    return `Great question! Here's what first-time buyers should focus on:
-
-**Financial Preparation**
-• Get pre-approved for a mortgage before house hunting
-• Aim for a 20% down payment to avoid PMI (though 3-5% is possible)
-• Factor in closing costs (2-5% of purchase price)
-
-**Property Priorities**
-• Location over cosmetics - you can update a kitchen, not a neighborhood
-• Check the "bones" - roof, HVAC, plumbing, electrical
-• Consider future resale value
-
-**Due Diligence**
-• Always get a home inspection
-• Research the neighborhood at different times of day
-• Review HOA rules if applicable
-
-**Common Mistakes to Avoid**
-• Don't max out your budget - leave room for unexpected costs
-• Don't skip the inspection to win a bid
-• Don't let emotions override data
-
-Would you like me to elaborate on any of these points?`;
+function getFallbackResponse(input: string): string {
+  const lower = input.toLowerCase();
+  if (lower.includes('first home') || lower.includes('first-time')) {
+    return `Here's what first-time buyers should focus on:\n\n• Get pre-approved for a mortgage\n• Aim for 20% down to avoid PMI\n• Location over cosmetics\n• Always get a home inspection\n• Don't max out your budget\n\nWould you like me to elaborate on any of these?`;
   }
-
-  if (lowercaseInput.includes('overpriced') || lowercaseInput.includes('price')) {
-    return `Here's how to evaluate if a property is fairly priced:
-
-**Compare Price Per Square Foot**
-• Look at recent sales (last 6 months) within 0.5 miles
-• Properties should be similar in age, condition, and features
-• Austin average is around $350-400/sqft depending on area
-
-**Check Days on Market**
-• 30+ days may indicate overpricing
-• 60+ days is a strong negotiation signal
-• Below 14 days suggests high demand or fair pricing
-
-**Red Flags for Overpricing**
-• Price increases after listing
-• Multiple price reductions
-• Priced significantly above comparable sales
-• Seller unwilling to negotiate
-
-**Market Conditions**
-• In buyer's markets, expect 5-10% below asking
-• In seller's markets, expect to pay at or above asking
-
-Want me to analyze a specific property for you?`;
+  if (lower.includes('price') || lower.includes('overpriced')) {
+    return `To evaluate pricing:\n\n• Compare price/sqft to recent sales nearby\n• Check days on market (30+ may signal overpricing)\n• Look for price reductions in listing history\n• Consider condition relative to comps\n\nWant me to analyze a specific property?`;
   }
-
-  if (lowercaseInput.includes('offer') || lowercaseInput.includes('bid')) {
-    return `Here's my strategy for making competitive offers:
-
-**Before Making an Offer**
-• Get fully pre-approved (not just pre-qualified)
-• Understand the seller's motivation
-• Research comparable sales
-
-**Offer Strategy**
-• In competitive markets: offer at or slightly above asking
-• Properties 30+ days on market: start 5-8% below
-• Properties 60+ days: start 10-15% below
-
-**Strengthen Your Offer Without Overpaying**
-• Larger earnest money deposit (1-3% shows commitment)
-• Flexible closing timeline
-• Minimize contingencies (if comfortable)
-• Write a personal letter (some sellers appreciate it)
-
-**Know Your Walk-Away Point**
-• Set a maximum price before negotiating
-• Factor in repair costs from inspection
-• Don't let emotions push you past your limit
-
-Would you like help analyzing a specific property to determine an offer strategy?`;
-  }
-
-  return `I'm your AI Buyer Agent, here to help you make informed real estate decisions without bias or pressure.
-
-I can help you with:
-• **Property Analysis** - Evaluate listings for fair pricing and red flags
-• **Market Insights** - Understand local trends and timing
-• **Offer Strategy** - Craft competitive bids without overpaying
-• **Due Diligence** - Know what to look for in inspections
-• **Financial Planning** - Understand true costs of ownership
-
-Ask me anything specific about buying property, or share a listing you'd like me to analyze!`;
+  return `I'm your AI Real Estate Agent. I can help with:\n\n• Property Analysis & Valuations\n• Market Insights & Trends\n• Offer Strategy\n• Selling Strategy\n• Due Diligence\n\nAsk me anything specific!`;
 }

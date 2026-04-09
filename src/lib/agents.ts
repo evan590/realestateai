@@ -12,6 +12,7 @@ export interface Agent {
   traits: string[];
   specialties: string[];
   style: string;
+  agentRole: 'buyer' | 'seller';
 }
 
 export interface AgentActivity {
@@ -39,6 +40,7 @@ export const agents: Agent[] = [
     traits: ['Highly analytical', 'Detail-oriented', 'Risk-aware', 'Market-focused'],
     specialties: ['Investment analysis', 'Comparable market analysis', 'ROI calculations', 'Risk assessment'],
     style: 'Straightforward and precise. Alex presents information with clear metrics and actionable insights.',
+    agentRole: 'buyer',
   },
   {
     id: 'jordan',
@@ -52,6 +54,7 @@ export const agents: Agent[] = [
     traits: ['Patient', 'Educational', 'Supportive', 'Thorough'],
     specialties: ['First-time buyer guidance', 'Process explanation', 'Neighborhood research', 'Lifestyle matching'],
     style: 'Warm and educational. Jordan breaks down complex topics and ensures you understand every step.',
+    agentRole: 'buyer',
   },
   {
     id: 'sam',
@@ -65,6 +68,21 @@ export const agents: Agent[] = [
     traits: ['Strategic', 'Direct', 'Results-driven', 'Assertive'],
     specialties: ['Offer strategy', 'Negotiation tactics', 'Deal structuring', 'Closing optimization'],
     style: 'Confident and strategic. Sam cuts to the chase and focuses on winning you the best possible terms.',
+    agentRole: 'buyer',
+  },
+  {
+    id: 'morgan',
+    name: 'Morgan',
+    avatar: '🏷️',
+    color: '#F59E0B',
+    gradientClass: 'from-amber-500 to-orange-600',
+    personality: 'The Seller Strategist',
+    tagline: 'Maximize your sale, minimize the hassle',
+    description: 'Morgan specializes in seller strategy — from pricing and staging to offer analysis and negotiation. Data-driven recommendations to help you get the best possible terms on your sale.',
+    traits: ['Strategic', 'Market-savvy', 'Detail-oriented', 'Results-focused'],
+    specialties: ['Pricing strategy', 'Listing optimization', 'Offer analysis', 'Seller-side negotiation'],
+    style: 'Strategic and market-focused. Morgan presents clear pricing recommendations backed by data and helps sellers make confident decisions.',
+    agentRole: 'seller',
   },
 ];
 

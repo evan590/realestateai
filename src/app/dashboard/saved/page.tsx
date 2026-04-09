@@ -1,30 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PropertyCard } from '@/components/property/PropertyCard';
 import { mockProperties } from '@/lib/mock-properties';
+import { getSavedPropertyIds, toggleSaveProperty, seedSavedProperties } from '@/lib/saved-properties-store';
+import { Property } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import Link from 'next/link';
 
 export default function SavedPropertiesPage() {
-  // Mock saved properties - in production, fetch from Supabase
-  const [savedPropertyIds, setSavedPropertyIds] = useState<string[]>(['1', '3', '5', '7', '10']);
-  const savedProperties = mockProperties.filter((p) => savedPropertyIds.includes(p.id));
+  const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [savedProperties, setSavedProperties] = useState<Property[]>([]);
 
-  const handleRemove = (propertyId: string) => {
-    setSavedPropertyIds((prev) => prev.filter((id) => id !== propertyId));
+  useEffect(() => {
+    seedSavedProperties();
+    const ids = getSavedPropertyIds();
+    setSavedIds(ids);
+    setSavedProperties(mockProperties.filter((p) => ids.includes(p.id)));
+  }, []);
+
+  const handleToggle = (propertyId: string) => {
+    const isSaved = toggleSaveProperty(propertyId);
+    const newIds = getSavedPropertyIds();
+    setSavedIds(newIds);
+    setSavedProperties(mockProperties.filter((p) => newIds.includes(p.id)));
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Saved Properties</h1>
-          <p className="text-slate-400 mt-1">
-            {savedProperties.length} properties saved
-          </p>
+          <p className="text-slate-400 mt-1">{savedProperties.length} properties saved</p>
         </div>
         {savedProperties.length > 0 && (
           <Link href="/dashboard/buyer-agent">
@@ -40,14 +48,13 @@ export default function SavedPropertiesPage() {
 
       {savedProperties.length > 0 ? (
         <>
-          {/* Properties grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {savedProperties.map((property) => (
               <PropertyCard
                 key={property.id}
                 property={property}
                 isSaved={true}
-                onSave={() => handleRemove(property.id)}
+                onSave={() => handleToggle(property.id)}
               />
             ))}
           </div>
@@ -102,9 +109,7 @@ export default function SavedPropertiesPage() {
             </svg>
           </div>
           <h3 className="text-lg font-medium text-white mb-2">No saved properties</h3>
-          <p className="text-slate-400 mb-4">
-            Start browsing and save properties you&apos;re interested in
-          </p>
+          <p className="text-slate-400 mb-4">Start browsing and save properties you&apos;re interested in</p>
           <Link href="/dashboard/search">
             <Button>Search Properties</Button>
           </Link>

@@ -3,6 +3,7 @@
 import { PropertyFilters as Filters } from '@/types';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
+import { US_STATES } from '@/lib/utils';
 
 interface PropertyFiltersProps {
   filters: Filters;
@@ -70,11 +71,11 @@ export function PropertyFilters({ filters, onChange, onReset }: PropertyFiltersP
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {/* Location */}
-        <div className="col-span-2">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        {/* City */}
+        <div>
           <Input
-            placeholder="City or ZIP"
+            placeholder="City"
             value={filters.city || ''}
             onChange={(e) => onChange({ ...filters, city: e.target.value || undefined })}
             leftIcon={
@@ -83,6 +84,15 @@ export function PropertyFilters({ filters, onChange, onReset }: PropertyFiltersP
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             }
+          />
+        </div>
+
+        {/* State */}
+        <div>
+          <Select
+            options={US_STATES}
+            value={filters.state || ''}
+            onChange={(e) => onChange({ ...filters, state: e.target.value || undefined })}
           />
         </div>
 
@@ -129,6 +139,11 @@ export function PropertyFilters({ filters, onChange, onReset }: PropertyFiltersP
               {filters.city && (
                 <span className="px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs">
                   {filters.city}
+                </span>
+              )}
+              {filters.state && (
+                <span className="px-2 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-xs">
+                  {filters.state}
                 </span>
               )}
               {(filters.minPrice || filters.maxPrice) && (

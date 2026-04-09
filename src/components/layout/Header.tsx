@@ -5,7 +5,11 @@ import { Button } from '@/components/ui/Button';
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 
-export function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export function Header({ onMenuClick }: HeaderProps) {
   const { user, signOut } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const [showHumanModal, setShowHumanModal] = useState(false);
@@ -24,7 +28,17 @@ export function Header() {
 
   return (
     <>
-      <header className="h-16 bg-slate-900/80 backdrop-blur-sm border-b border-slate-800 flex items-center justify-between px-6">
+      <header className="h-16 bg-slate-900/80 backdrop-blur-sm border-b border-slate-800 flex items-center justify-between px-4 md:px-6">
+        {/* Mobile menu button */}
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors mr-2"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
         {/* Search bar */}
         <div className="flex-1 max-w-xl">
           <div className="relative">

@@ -1,63 +1,49 @@
 import { NextRequest } from 'next/server';
 import OpenAI from 'openai';
+import { getAgentById, getDefaultAgent } from '@/lib/agents';
+import { buildSystemPrompt, buildPropertyContext } from '@/lib/prompts';
+import { getProvider } from '@/lib/providers';
 
-// Initialize OpenAI client only when API key is available
 const getOpenAIClient = () => {
-  if (!process.env.OPENAI_API_KEY) {
-    return null;
-  }
-  return new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  if (!process.env.OPENAI_API_KEY) return null;
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 };
-
-const BUYER_AGENT_SYSTEM_PROMPT = `You are an AI Buyer Agent for RealEstateAI, an unbiased real estate platform. Your role is to help users make informed property decisions based on data and facts, not emotions or sales pressure.
-
-Your core principles:
-- Be objective and data-driven
-- Highlight both positives AND negatives of properties
-- Never push users toward a purchase - help them decide if it's right for them
-- Provide honest valuations and risk assessments
-- Suggest when to walk away from a deal
-- No upselling, no pressure, no bias
-
-When analyzing properties, consider:
-- Price per square foot compared to market averages
-- Days on market and what that signals
-- Neighborhood trends and comparable sales
-- Potential red flags (age, condition, location issues)
-- Investment potential and resale value
-- Hidden costs (HOA, taxes, maintenance)
-
-Be concise but thorough. Use specific numbers and percentages when possible. Format responses with clear sections when appropriate using markdown.`;
 
 export async function POST(request: NextRequest) {
   try {
-    const { messages, propertyContext } = await request.json();
+    const { messages, propertyContext, agentId, propertyId } = await request.json();
+
+    const agent = (agentId ? getAgentById(agentId) : null) || getDefaultAgent();
+
+    // Build property context from provider if propertyId is given
+    let enrichedContext = propertyContext || '';
+    if (propertyId && !enrichedContext) {
+      try {
+        const provider = getProvider();
+        const property = await provider.getProperty(propertyId);
+        if (property) {
+          enrichedContext = buildPropertyContext(property);
+        }
+      } catch {
+        // Continue without enriched context
+      }
+    }
+
+    const systemPrompt = buildSystemPrompt(agent, enrichedContext || undefined);
 
     const openai = getOpenAIClient();
 
-    // Check if OpenAI API key is configured
     if (!openai) {
-      // Return a mock streaming response if no API key
       return new Response(
-        getMockResponse(messages[messages.length - 1]?.content || ''),
-        {
-          headers: {
-            'Content-Type': 'text/plain',
-          },
-        }
+        getMockResponse(messages[messages.length - 1]?.content || '', agent.id),
+        { headers: { 'Content-Type': 'text/plain' } }
       );
     }
-
-    const contextMessage = propertyContext
-      ? `\n\nCurrent property context:\n${propertyContext}`
-      : '';
 
     const response = await openai.chat.completions.create({
       model: 'gpt-4-turbo-preview',
       messages: [
-        { role: 'system', content: BUYER_AGENT_SYSTEM_PROMPT + contextMessage },
+        { role: 'system', content: systemPrompt },
         ...messages,
       ],
       stream: true,
@@ -65,7 +51,6 @@ export async function POST(request: NextRequest) {
       max_tokens: 1000,
     });
 
-    // Create a readable stream from the OpenAI response
     const encoder = new TextEncoder();
     const stream = new ReadableStream({
       async start(controller) {
@@ -87,25 +72,27 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('AI Chat Error:', error);
-
-    // Return mock response on error
     return new Response(
-      'I apologize, but I\'m having trouble connecting right now. Please try again in a moment, or check that the OpenAI API key is configured in your environment variables.',
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-      }
+      'I apologize, but I\'m having trouble connecting right now. Please try again in a moment.',
+      { status: 200, headers: { 'Content-Type': 'text/plain' } }
     );
   }
 }
 
-function getMockResponse(input: string): string {
+function getMockResponse(input: string, agentId: string): string {
   const lowercaseInput = input.toLowerCase();
 
+  const agentIntros: Record<string, string> = {
+    alex: "Let me run the numbers on that.",
+    jordan: "Great question! Let me walk you through this.",
+    sam: "Here's the strategic play.",
+    morgan: "Let me help you maximize your position.",
+  };
+
+  const intro = agentIntros[agentId] || '';
+
   if (lowercaseInput.includes('first home') || lowercaseInput.includes('first-time')) {
-    return `Great question! Here's what first-time buyers should focus on:
+    return `${intro ? intro + '\n\n' : ''}Here's what first-time buyers should focus on:
 
 **Financial Preparation**
 • Get pre-approved for a mortgage before house hunting
@@ -126,7 +113,7 @@ Would you like me to elaborate on any of these points?`;
   }
 
   if (lowercaseInput.includes('overpriced') || lowercaseInput.includes('price')) {
-    return `Here's how to evaluate if a property is fairly priced:
+    return `${intro ? intro + '\n\n' : ''}Here's how to evaluate if a property is fairly priced:
 
 **Compare Price Per Square Foot**
 • Look at recent sales (last 6 months) within 0.5 miles
@@ -144,13 +131,34 @@ Would you like me to elaborate on any of these points?`;
 Want me to analyze a specific property for you?`;
   }
 
-  return `I'm your AI Buyer Agent, here to help you make informed real estate decisions.
+  if (lowercaseInput.includes('sell') || lowercaseInput.includes('listing') || lowercaseInput.includes('list my')) {
+    return `${intro ? intro + '\n\n' : ''}I can help you with your selling strategy:
+
+**Pricing Strategy**
+• I'll analyze comparable sales to find the optimal listing price
+• We'll consider market conditions, seasonality, and competition
+
+**Listing Optimization**
+• Professional photos and staging recommendations
+• Compelling description that highlights key selling points
+• Feature emphasis based on what buyers in your market value most
+
+**Offer Management**
+• I'll analyze each offer considering price, terms, and buyer strength
+• Strategic counter-offer recommendations
+• Timeline optimization
+
+What's the address of the property you're looking to sell?`;
+  }
+
+  return `${intro ? intro + '\n\n' : ''}I'm your AI Real Estate Agent, here to help you make informed decisions.
 
 I can help you with:
 • **Property Analysis** - Evaluate listings for fair pricing and red flags
 • **Market Insights** - Understand local trends and timing
 • **Offer Strategy** - Craft competitive bids without overpaying
+• **Selling Strategy** - Price, list, and negotiate for maximum value
 • **Due Diligence** - Know what to look for in inspections
 
-Ask me anything specific about buying property, or share a listing you'd like me to analyze!`;
+Ask me anything specific, or share a listing you'd like me to analyze!`;
 }

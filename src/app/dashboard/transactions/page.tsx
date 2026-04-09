@@ -1,115 +1,187 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/Card';
+import { useState, useEffect } from 'react';
+import { getTransactions, seedMockTransactions } from '@/lib/transactions';
+import { Transaction } from '@/types';
+import { formatPrice } from '@/lib/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
 
 export default function TransactionsPage() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    seedMockTransactions();
+    setTransactions(getTransactions());
+  }, []);
+
+  const active = transactions.filter((t) => t.status !== 'closed');
+  const completed = transactions.filter((t) => t.status === 'closed');
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-white">Transactions</h1>
-        <p className="text-slate-400 mt-1">
-          Manage your active and completed transactions
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Transactions</h1>
+          <p className="text-slate-400 mt-1">Track your active and completed transactions</p>
+        </div>
       </div>
 
-      {/* Coming soon state */}
-      <Card className="border-dashed">
-        <CardContent className="py-12">
-          <div className="text-center">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-full flex items-center justify-center">
-              <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4">
+        <Card>
+          <CardContent className="text-center">
+            <p className="text-2xl font-bold text-white">{active.length}</p>
+            <p className="text-slate-400 text-sm">Active</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="text-center">
+            <p className="text-2xl font-bold text-white">{transactions.filter((t) => t.status === 'offer_made').length}</p>
+            <p className="text-slate-400 text-sm">Pending Offers</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="text-center">
+            <p className="text-2xl font-bold text-white">{completed.length}</p>
+            <p className="text-slate-400 text-sm">Completed</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Active transactions */}
+      {active.length > 0 ? (
+        <div className="space-y-4">
+          {active.map((tx) => (
+            <TransactionCard key={tx.id} transaction={tx} />
+          ))}
+        </div>
+      ) : (
+        <Card className="border-dashed">
+          <CardContent>
+            <div className="text-center py-8">
+              <span className="text-4xl mb-4 block">📋</span>
+              <h3 className="text-lg font-medium text-white mb-2">No active transactions</h3>
+              <p className="text-slate-400 mb-4">Find a property and make an offer to start a transaction</p>
+              <div className="flex justify-center gap-3">
+                <Link href="/dashboard/search"><Button>Search Properties</Button></Link>
+                <Link href="/dashboard/buyer-agent"><Button variant="secondary">Talk to AI Agent</Button></Link>
+              </div>
             </div>
+          </CardContent>
+        </Card>
+      )}
 
-            <h2 className="text-xl font-bold text-white mb-2">Transaction Management</h2>
-            <p className="text-slate-400 max-w-md mx-auto mb-6">
-              Full transaction management is coming soon. This will include offer tracking,
-              document management, timeline monitoring, and automated workflows.
-            </p>
+      {/* Completed */}
+      {completed.length > 0 && (
+        <div>
+          <h2 className="text-lg font-semibold text-white mb-3">Completed</h2>
+          {completed.map((tx) => (
+            <TransactionCard key={tx.id} transaction={tx} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-8">
-              <div className="bg-slate-800/50 rounded-lg p-4">
-                <div className="text-emerald-400 font-bold text-2xl mb-1">0</div>
-                <div className="text-slate-400 text-sm">Active Transactions</div>
-              </div>
-              <div className="bg-slate-800/50 rounded-lg p-4">
-                <div className="text-emerald-400 font-bold text-2xl mb-1">0</div>
-                <div className="text-slate-400 text-sm">Pending Offers</div>
-              </div>
-              <div className="bg-slate-800/50 rounded-lg p-4">
-                <div className="text-emerald-400 font-bold text-2xl mb-1">0</div>
-                <div className="text-slate-400 text-sm">Completed</div>
+function TransactionCard({ transaction: tx }: { transaction: Transaction }) {
+  const completedStages = tx.stages.filter((s) => s.status === 'completed').length;
+  const totalStages = tx.stages.length;
+  const progress = Math.round((completedStages / totalStages) * 100);
+
+  const currentStage = tx.stages.find((s) => s.status === 'in_progress') || tx.stages.find((s) => s.status === 'pending');
+
+  return (
+    <Card className="hover:border-emerald-500/30 transition-all">
+      <CardContent>
+        <div className="space-y-4">
+          {/* Header */}
+          <div className="flex items-start justify-between">
+            <div>
+              {tx.property && (
+                <>
+                  <h3 className="text-white font-medium">{tx.property.address}</h3>
+                  <p className="text-slate-400 text-sm">{tx.property.city}, {tx.property.state} {tx.property.zip}</p>
+                </>
+              )}
+              <div className="flex items-center gap-2 mt-1">
+                <span className={`px-2 py-0.5 text-xs font-medium rounded-full capitalize ${
+                  tx.type === 'buying' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'
+                }`}>
+                  {tx.type}
+                </span>
+                {currentStage && (
+                  <span className="text-slate-400 text-xs">Current: {currentStage.name}</span>
+                )}
               </div>
             </div>
-
-            <div className="space-y-4">
-              <p className="text-slate-500 text-sm">Ready to start?</p>
-              <div className="flex items-center justify-center gap-4">
-                <Link href="/dashboard/search">
-                  <Button>Find a Property</Button>
-                </Link>
-                <Link href="/dashboard/buyer-agent">
-                  <Button variant="secondary">Talk to AI Agent</Button>
-                </Link>
-              </div>
+            <div className="text-right">
+              <p className="text-xl font-bold text-white">{formatPrice(tx.offerAmount)}</p>
+              {tx.closingDate && (
+                <p className="text-slate-400 text-xs">
+                  Closing: {new Date(tx.closingDate).toLocaleDateString()}
+                </p>
+              )}
             </div>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Feature preview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          {
-            icon: (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-              </svg>
-            ),
-            title: 'Offer Tracking',
-            description: 'Track all your offers and counter-offers in one place',
-          },
-          {
-            icon: (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            ),
-            title: 'Document Hub',
-            description: 'E-signatures, contracts, and disclosures all organized',
-          },
-          {
-            icon: (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            ),
-            title: 'Timeline View',
-            description: 'Visual timeline from offer to closing',
-          },
-          {
-            icon: (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-            ),
-            title: 'Smart Alerts',
-            description: 'Never miss a deadline or important update',
-          },
-        ].map((feature) => (
-          <Card key={feature.title} className="hover:border-slate-600 transition-colors">
-            <CardContent>
-              <div className="text-emerald-400 mb-3">{feature.icon}</div>
-              <h3 className="font-medium text-white mb-1">{feature.title}</h3>
-              <p className="text-slate-400 text-sm">{feature.description}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+          {/* Progress bar */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-slate-400 text-xs">Progress</span>
+              <span className="text-slate-400 text-xs">{progress}%</span>
+            </div>
+            <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full transition-all"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Timeline */}
+          <div className="flex items-center gap-1">
+            {tx.stages.map((stage, i) => (
+              <div key={stage.name} className="flex items-center flex-1">
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+                  stage.status === 'completed'
+                    ? 'bg-emerald-500 text-white'
+                    : stage.status === 'in_progress'
+                    ? 'bg-amber-500 text-white animate-pulse'
+                    : 'bg-slate-700 text-slate-500'
+                }`}>
+                  {stage.status === 'completed' ? '✓' : i + 1}
+                </div>
+                {i < tx.stages.length - 1 && (
+                  <div className={`flex-1 h-0.5 mx-1 ${
+                    stage.status === 'completed' ? 'bg-emerald-500' : 'bg-slate-700'
+                  }`} />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Stage labels */}
+          <div className="flex items-center gap-1 text-xs">
+            {tx.stages.map((stage) => (
+              <div key={stage.name} className="flex-1 text-center">
+                <span className={stage.status === 'completed' ? 'text-emerald-400' : stage.status === 'in_progress' ? 'text-amber-400' : 'text-slate-600'}>
+                  {stage.name}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Notes */}
+          {currentStage?.notes && (
+            <div className="p-2 bg-slate-700/30 rounded-lg">
+              <p className="text-slate-300 text-sm">{currentStage.notes}</p>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
