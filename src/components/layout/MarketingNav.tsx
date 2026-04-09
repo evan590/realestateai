@@ -34,6 +34,9 @@ export default function MarketingNav() {
             <Link href="/trust" className="text-slate-300 hover:text-white transition-colors">
               Trust & Security
             </Link>
+            <Link href="/pitch-deck.html" className="text-slate-300 hover:text-white transition-colors">
+              Pitch Deck
+            </Link>
             <Link href="/sign-in" className="text-slate-300 hover:text-white transition-colors">
               Sign In
             </Link>
@@ -62,6 +65,7 @@ export default function MarketingNav() {
               { href: '/meet-your-agent', label: 'Meet Your Agent' },
               { href: '/pricing', label: 'Pricing' },
               { href: '/trust', label: 'Trust & Security' },
+              { href: '/pitch-deck.html', label: 'Pitch Deck' },
               { href: '/sign-in', label: 'Sign In' },
             ].map((link) => (
               <Link
